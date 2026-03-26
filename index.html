@@ -1,445 +1,432 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disneyland Walkthrough Builder</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            text-align: center;
+            padding: 30px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        select, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #004c99;
+        }
+        .start-btn {
+            background-color: #28a745;
+            width: 100%;
+            font-size: 18px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .start-btn:hover {
+            background-color: #218838;
+        }
+        .clear-btn {
+            background-color: #dc3545;
+            font-size: 14px;
+            padding: 8px 15px;
+        }
+        .clear-btn:hover {
+            background-color: #c82333;
+        }
+        #skip-btn {
+            background-color: #ff9800; 
+            display: none; 
+            margin-top: 15px;
+            width: 100%;
+            font-size: 16px;
+            padding: 12px;
+        }
+        #skip-btn:hover {
+            background-color: #e68a00;
+        }
+        #itinerary-container {
+            text-align: left;
+            background: #fdfdfd;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        #itinerary-list {
+            padding-left: 0;
+        }
+        #itinerary-list li {
+            list-style-type: none;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            border-left: 5px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .active-item {
+            background-color: #fff3cd !important;
+            font-weight: bold;
+            border-left: 5px solid #ffc107 !important;
+            transform: scale(1.02);
+        }
+        #story-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.5;
+            min-height: 60px;
+        }
+        #display-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Hide the audio players since we handle them via code now */
+        .hidden-player {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Disneyland Walkthrough Builder&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f4f6f8;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #333;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 700px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 10px rgba(0,0,0,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>select, button {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>button {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #0066cc;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>button:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #004c99;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.start-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #28a745;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 18px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.start-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #218838;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.clear-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #dc3545;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 8px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.clear-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #c82333;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#skip-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #ff9800;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: none;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#skip-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #e68a00;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#itinerary-container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: left;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #fdfdfd;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#itinerary-list {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding-left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#itinerary-list li {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>list-style-type: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #eee;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-left: 5px solid transparent;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.active-item {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #fff3cd !important;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-left: 5px solid #ffc107 !important;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transform: scale(1.02);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#story-box {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #e9ecef;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.5;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>min-height: 60px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#display-image {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 8px rgba(0,0,0,0.2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Hide the audio players since we handle them via code now */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.hidden-player {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Disneyland Walkthrough Builder&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Design your day. Add lands and rides to your itinerary, then press Start!&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="land-select" onchange="updateRides()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value=""&gt;-- Choose a Land --&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="mainStreet"&gt;Main Street, U.S.A.&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="adventureland"&gt;Adventureland&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="fantasyland"&gt;Fantasyland&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="tomorrowland"&gt;Tomorrowland&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="ride-select"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value=""&gt;-- Choose a Ride (Optional) --&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="addToItinerary()"&gt;Add to Itinerary&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="itinerary-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;Your Plan:&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;ul id="itinerary-list"&gt;&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="clear-btn" onclick="clearItinerary()"&gt;🗑️ Clear Itinerary&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="start-btn" onclick="startWalkthrough()"&gt;▶ Start My Walkthrough&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="story-box"&gt;Build your itinerary above!&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;img id="display-image" src="" alt="Park Location"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="skip-btn" onclick="skipStep()"&gt;⏭️ Skip to Next&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;audio id="player-1" class="hidden-player"&gt;&lt;/audio&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;audio id="player-2" class="hidden-player"&gt;&lt;/audio&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const parkData = {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>mainStreet: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>name: "Main Street, U.S.A.",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>image: "images/main_street.jpg",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>ambientAudio: ["audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],</p>
-<p class="p1"><span class="Apple-converted-space">                </span>rides: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>cinema: { name: "Main Street Cinema", image: "images/cinema.jpg", audio: "audio/cinema_bgm.mp3" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>adventureland: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>name: "Adventureland",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>image: "images/adventureland.jpg",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],</p>
-<p class="p1"><span class="Apple-converted-space">                </span>rides: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>jungle: { name: "Jungle Cruise", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>fantasyland: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>name: "Fantasyland",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>image: "images/fantasyland.jpg",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>ambientAudio: ["audio/fantasy_bgm1.mp3"],</p>
-<p class="p1"><span class="Apple-converted-space">                </span>rides: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>tomorrowland: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>name: "Tomorrowland",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>image: "images/tomorrowland.jpg",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>ambientAudio: ["audio/tomorrow_bgm1.mp3"],</p>
-<p class="p1"><span class="Apple-converted-space">                </span>rides: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>spaceMountain: { name: "Space Mountain", image: "images/space.jpg", audio: "audio/space_mountain.mp3" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>starTours: { name: "Star Tours", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const landSelect = document.getElementById('land-select');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const rideSelect = document.getElementById('ride-select');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const itineraryList = document.getElementById('itinerary-list');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const storyBox = document.getElementById('story-box');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const displayImage = document.getElementById('display-image');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const skipBtn = document.getElementById('skip-btn');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Audio System Variables</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const player1 = document.getElementById('player-1');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const player2 = document.getElementById('player-2');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let activePlayer = 1; // Tracks which player is currently audible</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let fadeInterval; // Used to manage the timing of the volume fade</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>let itinerary = [];<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>let playbackQueue = [];<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function updateRides() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const selectedLand = landSelect.value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>rideSelect.innerHTML = '&lt;option value=""&gt;-- Choose a Ride (Optional) --&lt;/option&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (selectedLand &amp;&amp; parkData[selectedLand]) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const rides = parkData[selectedLand].rides;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>for (const rideKey in rides) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const option = document.createElement('option');</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>option.value = rideKey;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>option.text = rides[rideKey].name;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>rideSelect.appendChild(option);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function addToItinerary() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const landKey = landSelect.value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const rideKey = rideSelect.value;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (!landKey) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>alert("Please select a land first!");</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const landData = parkData[landKey];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let displayText = landData.name;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (rideKey) displayText += " ➔ " + landData.rides[rideKey].name;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const itemIndex = itinerary.length;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>itinerary.push({ land: landKey, ride: rideKey, index: itemIndex });</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const li = document.createElement('li');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>li.textContent = displayText;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>li.id = "itinerary-item-" + itemIndex;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>itineraryList.appendChild(li);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>landSelect.value = "";</p>
-<p class="p1"><span class="Apple-converted-space">            </span>updateRides();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function clearItinerary() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>itinerary = [];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>playbackQueue = [];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>itineraryList.innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>storyBox.innerHTML = 'Build your itinerary above!';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>displayImage.style.display = 'none';</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Stop both players</p>
-<p class="p1"><span class="Apple-converted-space">            </span>player1.pause();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>player2.pause();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>player1.src = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>player2.src = '';</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>skipBtn.style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function startWalkthrough() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (itinerary.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>alert("Your itinerary is empty! Add some stops first.");</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>playbackQueue = [];<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>itinerary.forEach(item =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const landData = parkData[item.land];</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const randomAmbient = landData.ambientAudio[Math.floor(Math.random() * landData.ambientAudio.length)];</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>playbackQueue.push({</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>audio: randomAmbient,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>image: landData.image,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>text: `Walking through ${landData.name}...`,</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>targetId: "itinerary-item-" + item.index</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (item.ride) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const rideData = landData.rides[item.ride];</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>playbackQueue.push({</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>audio: rideData.audio,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>image: rideData.image,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>text: `Riding ${rideData.name}!`,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>targetId: "itinerary-item-" + item.index</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const lastItem = itinerary[itinerary.length - 1];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const lastLandData = parkData[lastItem.land];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const finalAmbient = lastLandData.ambientAudio[Math.floor(Math.random() * lastLandData.ambientAudio.length)];</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>playbackQueue.push({</p>
-<p class="p1"><span class="Apple-converted-space">                </span>audio: finalAmbient,</p>
-<p class="p1"><span class="Apple-converted-space">                </span>image: lastLandData.image,</p>
-<p class="p1"><span class="Apple-converted-space">                </span>text: `Exiting back into ${lastLandData.name}...`,</p>
-<p class="p1"><span class="Apple-converted-space">                </span>targetId: "itinerary-item-" + lastItem.index</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>skipBtn.style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>playNextInQueue();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function skipStep() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>playNextInQueue();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function playNextInQueue() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Remove previous UI highlights</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const allItems = document.querySelectorAll('#itinerary-list li');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>allItems.forEach(li =&gt; li.classList.remove('active-item'));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>let currentPlayer = activePlayer === 1 ? player1 : player2;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let nextPlayer = activePlayer === 1 ? player2 : player1;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (playbackQueue.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>storyBox.innerHTML = "Your magical day has come to an end!";</p>
-<p class="p1"><span class="Apple-converted-space">                </span>displayImage.style.display = "none";</p>
-<p class="p1"><span class="Apple-converted-space">                </span>skipBtn.style.display = 'none';</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// Fade out the last song to complete silence</p>
-<p class="p1"><span class="Apple-converted-space">                </span>fadeOutSingle(currentPlayer);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const currentStep = playbackQueue.shift();<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Highlight the new UI element</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (currentStep.targetId) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const activeListItem = document.getElementById(currentStep.targetId);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (activeListItem) activeListItem.classList.add('active-item');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Update text and image</p>
-<p class="p1"><span class="Apple-converted-space">            </span>storyBox.innerHTML = currentStep.text;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (currentStep.image) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>displayImage.src = currentStep.image;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>displayImage.style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>displayImage.style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// --- THE CROSSFADE MAGIC ---</p>
-<p class="p1"><span class="Apple-converted-space">            </span>nextPlayer.src = currentStep.audio;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>nextPlayer.volume = 0; // Start at zero volume</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>nextPlayer.play().then(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>// If a song is currently playing, crossfade them. Otherwise, just fade the first one in.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (!currentPlayer.paused &amp;&amp; currentPlayer.src) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>crossfade(currentPlayer, nextPlayer);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fadeInSingle(nextPlayer);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>// Switch the active player tag for the next round</p>
-<p class="p1"><span class="Apple-converted-space">                </span>activePlayer = activePlayer === 1 ? 2 : 1;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}).catch(e =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>console.log("Audio not found: " + currentStep.audio);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Fades one player OUT while fading the other IN over 2 seconds</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function crossfade(fadeOutPlayer, fadeInPlayer) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>clearInterval(fadeInterval);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let volume = 0;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>fadeInterval = setInterval(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>volume += 0.05; // 5% volume change per tick</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (volume &gt;= 1) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>clearInterval(fadeInterval);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fadeInPlayer.volume = 1;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fadeOutPlayer.volume = 0;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fadeOutPlayer.pause(); // Turn off the old player to save resources</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fadeInPlayer.volume = volume;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fadeOutPlayer.volume = 1 - volume;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, 100); // Ticks every 100 milliseconds</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Fades a single player IN (used for the very first track)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function fadeInSingle(player) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>clearInterval(fadeInterval);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let volume = 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>player.volume = 0;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>fadeInterval = setInterval(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>volume += 0.05;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (volume &gt;= 1) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>clearInterval(fadeInterval);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>player.volume = 1;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>player.volume = volume;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, 100);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Fades a single player OUT (used for the very end of the walkthrough)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function fadeOutSingle(player) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>clearInterval(fadeInterval);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let volume = player.volume;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>fadeInterval = setInterval(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>volume -= 0.05;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (volume &lt;= 0) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>clearInterval(fadeInterval);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>player.volume = 0;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>player.pause();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>player.volume = volume;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, 100);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// When a track finishes naturally, trigger the next one</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player1.onended = function() { playNextInQueue(); };</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player2.onended = function() { playNextInQueue(); };</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+    <div class="container">
+        <h1>Disneyland Walkthrough Builder</h1>
+        <p>Design your day. Add lands and rides to your itinerary, then press Start!</p>
+
+        <!-- Dropdowns -->
+        <select id="land-select" onchange="updateRides()">
+            <option value="">-- Choose a Land --</option>
+            <option value="mainStreet">Main Street, U.S.A.</option>
+            <option value="adventureland">Adventureland</option>
+            <option value="fantasyland">Fantasyland</option>
+            <option value="tomorrowland">Tomorrowland</option>
+        </select>
+
+        <select id="ride-select">
+            <option value="">-- Choose a Ride (Optional) --</option>
+        </select>
+
+        <button onclick="addToItinerary()">Add to Itinerary</button>
+
+        <div id="itinerary-container">
+            <h3>Your Plan:</h3>
+            <ul id="itinerary-list"></ul>
+            <button class="clear-btn" onclick="clearItinerary()">🗑️ Clear Itinerary</button>
+        </div>
+
+        <button class="start-btn" onclick="startWalkthrough()">▶ Start My Walkthrough</button>
+
+        <div id="story-box">Build your itinerary above!</div>
+        <img id="display-image" src="" alt="Park Location">
+        
+        <button id="skip-btn" onclick="skipStep()">⏭️ Skip to Next</button>
+
+        <!-- Two hidden audio players for DJ-style crossfading -->
+        <audio id="player-1" class="hidden-player"></audio>
+        <audio id="player-2" class="hidden-player"></audio>
+    </div>
+
+    <script>
+        const parkData = {
+            mainStreet: {
+                name: "Main Street, U.S.A.",
+                image: "images/main_street.jpg",
+                ambientAudio: ["audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
+                rides: {
+                    train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },
+                    cinema: { name: "Main Street Cinema", image: "images/cinema.jpg", audio: "audio/cinema_bgm.mp3" }
+                }
+            },
+            adventureland: {
+                name: "Adventureland",
+                image: "images/adventureland.jpg",
+                ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
+                rides: {
+                    indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
+                    jungle: { name: "Jungle Cruise", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
+                }
+            },
+            fantasyland: {
+                name: "Fantasyland",
+                image: "images/fantasyland.jpg",
+                ambientAudio: ["audio/fantasy_bgm1.mp3"],
+                rides: {
+                    peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },
+                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
+                }
+            },
+            tomorrowland: {
+                name: "Tomorrowland",
+                image: "images/tomorrowland.jpg",
+                ambientAudio: ["audio/tomorrow_bgm1.mp3"],
+                rides: {
+                    spaceMountain: { name: "Space Mountain", image: "images/space.jpg", audio: "audio/space_mountain.mp3" },
+                    starTours: { name: "Star Tours", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" }
+                }
+            }
+        };
+
+        const landSelect = document.getElementById('land-select');
+        const rideSelect = document.getElementById('ride-select');
+        const itineraryList = document.getElementById('itinerary-list');
+        const storyBox = document.getElementById('story-box');
+        const displayImage = document.getElementById('display-image');
+        const skipBtn = document.getElementById('skip-btn');
+
+        // Audio System Variables
+        const player1 = document.getElementById('player-1');
+        const player2 = document.getElementById('player-2');
+        let activePlayer = 1; // Tracks which player is currently audible
+        let fadeInterval; // Used to manage the timing of the volume fade
+
+        let itinerary = []; 
+        let playbackQueue = []; 
+
+        function updateRides() {
+            const selectedLand = landSelect.value;
+            rideSelect.innerHTML = '<option value="">-- Choose a Ride (Optional) --</option>';
+            if (selectedLand && parkData[selectedLand]) {
+                const rides = parkData[selectedLand].rides;
+                for (const rideKey in rides) {
+                    const option = document.createElement('option');
+                    option.value = rideKey;
+                    option.text = rides[rideKey].name;
+                    rideSelect.appendChild(option);
+                }
+            }
+        }
+
+        function addToItinerary() {
+            const landKey = landSelect.value;
+            const rideKey = rideSelect.value;
+
+            if (!landKey) {
+                alert("Please select a land first!");
+                return;
+            }
+
+            const landData = parkData[landKey];
+            let displayText = landData.name;
+            if (rideKey) displayText += " ➔ " + landData.rides[rideKey].name;
+
+            const itemIndex = itinerary.length;
+            itinerary.push({ land: landKey, ride: rideKey, index: itemIndex });
+
+            const li = document.createElement('li');
+            li.textContent = displayText;
+            li.id = "itinerary-item-" + itemIndex; 
+            itineraryList.appendChild(li);
+
+            landSelect.value = "";
+            updateRides();
+        }
+
+        function clearItinerary() {
+            itinerary = [];
+            playbackQueue = [];
+            itineraryList.innerHTML = '';
+            storyBox.innerHTML = 'Build your itinerary above!';
+            displayImage.style.display = 'none';
+            
+            // Stop both players
+            player1.pause();
+            player2.pause();
+            player1.src = '';
+            player2.src = '';
+            
+            skipBtn.style.display = 'none';
+        }
+
+        function startWalkthrough() {
+            if (itinerary.length === 0) {
+                alert("Your itinerary is empty! Add some stops first.");
+                return;
+            }
+
+            playbackQueue = []; 
+
+            itinerary.forEach(item => {
+                const landData = parkData[item.land];
+                const randomAmbient = landData.ambientAudio[Math.floor(Math.random() * landData.ambientAudio.length)];
+                
+                playbackQueue.push({
+                    audio: randomAmbient,
+                    image: landData.image,
+                    text: `Walking through ${landData.name}...`,
+                    targetId: "itinerary-item-" + item.index
+                });
+
+                if (item.ride) {
+                    const rideData = landData.rides[item.ride];
+                    playbackQueue.push({
+                        audio: rideData.audio,
+                        image: rideData.image,
+                        text: `Riding ${rideData.name}!`,
+                        targetId: "itinerary-item-" + item.index
+                    });
+                }
+            });
+
+            const lastItem = itinerary[itinerary.length - 1];
+            const lastLandData = parkData[lastItem.land];
+            const finalAmbient = lastLandData.ambientAudio[Math.floor(Math.random() * lastLandData.ambientAudio.length)];
+            
+            playbackQueue.push({
+                audio: finalAmbient,
+                image: lastLandData.image,
+                text: `Exiting back into ${lastLandData.name}...`,
+                targetId: "itinerary-item-" + lastItem.index
+            });
+
+            skipBtn.style.display = 'block';
+            playNextInQueue();
+        }
+
+        function skipStep() {
+            playNextInQueue();
+        }
+
+        function playNextInQueue() {
+            // Remove previous UI highlights
+            const allItems = document.querySelectorAll('#itinerary-list li');
+            allItems.forEach(li => li.classList.remove('active-item'));
+
+            let currentPlayer = activePlayer === 1 ? player1 : player2;
+            let nextPlayer = activePlayer === 1 ? player2 : player1;
+
+            if (playbackQueue.length === 0) {
+                storyBox.innerHTML = "Your magical day has come to an end!";
+                displayImage.style.display = "none";
+                skipBtn.style.display = 'none';
+                
+                // Fade out the last song to complete silence
+                fadeOutSingle(currentPlayer);
+                return;
+            }
+
+            const currentStep = playbackQueue.shift(); 
+
+            // Highlight the new UI element
+            if (currentStep.targetId) {
+                const activeListItem = document.getElementById(currentStep.targetId);
+                if (activeListItem) activeListItem.classList.add('active-item');
+            }
+
+            // Update text and image
+            storyBox.innerHTML = currentStep.text;
+            if (currentStep.image) {
+                displayImage.src = currentStep.image;
+                displayImage.style.display = 'block';
+            } else {
+                displayImage.style.display = 'none';
+            }
+
+            // --- THE CROSSFADE MAGIC ---
+            nextPlayer.src = currentStep.audio;
+            nextPlayer.volume = 0; // Start at zero volume
+            
+            nextPlayer.play().then(() => {
+                // If a song is currently playing, crossfade them. Otherwise, just fade the first one in.
+                if (!currentPlayer.paused && currentPlayer.src) {
+                    crossfade(currentPlayer, nextPlayer);
+                } else {
+                    fadeInSingle(nextPlayer);
+                }
+                // Switch the active player tag for the next round
+                activePlayer = activePlayer === 1 ? 2 : 1;
+            }).catch(e => {
+                console.log("Audio not found: " + currentStep.audio);
+            });
+        }
+
+        // Fades one player OUT while fading the other IN over 2 seconds
+        function crossfade(fadeOutPlayer, fadeInPlayer) {
+            clearInterval(fadeInterval);
+            let volume = 0;
+            
+            fadeInterval = setInterval(() => {
+                volume += 0.05; // 5% volume change per tick
+                
+                if (volume >= 1) {
+                    clearInterval(fadeInterval);
+                    fadeInPlayer.volume = 1;
+                    fadeOutPlayer.volume = 0;
+                    fadeOutPlayer.pause(); // Turn off the old player to save resources
+                } else {
+                    fadeInPlayer.volume = volume;
+                    fadeOutPlayer.volume = 1 - volume;
+                }
+            }, 100); // Ticks every 100 milliseconds
+        }
+
+        // Fades a single player IN (used for the very first track)
+        function fadeInSingle(player) {
+            clearInterval(fadeInterval);
+            let volume = 0;
+            player.volume = 0;
+            
+            fadeInterval = setInterval(() => {
+                volume += 0.05;
+                if (volume >= 1) {
+                    clearInterval(fadeInterval);
+                    player.volume = 1;
+                } else {
+                    player.volume = volume;
+                }
+            }, 100);
+        }
+
+        // Fades a single player OUT (used for the very end of the walkthrough)
+        function fadeOutSingle(player) {
+            clearInterval(fadeInterval);
+            let volume = player.volume;
+            
+            fadeInterval = setInterval(() => {
+                volume -= 0.05;
+                if (volume <= 0) {
+                    clearInterval(fadeInterval);
+                    player.volume = 0;
+                    player.pause();
+                } else {
+                    player.volume = volume;
+                }
+            }, 100);
+        }
+
+        // When a track finishes naturally, trigger the next one
+        player1.onended = function() { playNextInQueue(); };
+        player2.onended = function() { playNextInQueue(); };
+
+    </script>
 </body>
 </html>
