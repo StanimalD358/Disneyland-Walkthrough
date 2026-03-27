@@ -40,7 +40,7 @@
         .main-content {
             flex: 3;
             padding: 30px;
-            overflow-y: hidden; /* Changed to hidden so the map handles all scrolling */
+            overflow-y: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center; 
@@ -55,7 +55,6 @@
             border-left: 1px solid #282828;
         }
 
-        /* Added flex-shrink: 0 so titles stay visible above the giant map */
         h1 { margin-top: 0; font-size: 28px; width: 100%; text-align: left; flex-shrink: 0; }
         p.subtitle { color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; width: 100%; text-align: left; flex-shrink: 0; }
 
@@ -74,14 +73,14 @@
         .map-outer-container {
             position: relative;
             width: 100%;
-            flex: 1; /* ✨ MAGIC ✨ Eats all remaining vertical space */
+            flex: 1; 
             display: flex;
             flex-direction: column;
             margin-top: 10px;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
             border: 2px solid #333;
-            overflow: hidden; /* Keeps the zoom buttons inside the frame */
+            overflow: hidden; 
             background-color: #000;
         }
 
@@ -89,33 +88,30 @@
             position: relative;
             width: 100%;
             flex: 1; 
-            height: 100%; /* ✨ MAGIC ✨ Fills the outer container perfectly */
-            overflow: auto; /* Enables native panning/scrolling */
+            height: 100%; 
+            overflow: auto; 
             cursor: grab;
             
-            /* Hides the ugly native scrollbars */
             -ms-overflow-style: none;  
             scrollbar-width: none;  
         }
         .map-wrapper::-webkit-scrollbar { display: none; }
         .map-wrapper:active { cursor: grabbing; }
 
-        /* The container that actually stretches when zooming */
         #map-zoom-container {
             position: relative;
-            width: 100%; /* JS will change this to 200%, 300%, etc. */
-            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth zooming */
+            width: 100%; 
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
         }
 
         #park-map-image {
             width: 100%;
             display: block;
             height: auto;
-            user-select: none; /* Prevents ghost-dragging the image file */
+            user-select: none; 
             -webkit-user-drag: none;
         }
 
-        /* Floating Zoom Controls */
         .zoom-controls {
             position: absolute;
             bottom: 20px;
@@ -145,7 +141,6 @@
         .zoom-btn:hover { background-color: var(--accent-blue); }
         .zoom-btn:active { transform: scale(0.9); }
 
-        /* Map Pins */
         .map-pin {
             position: absolute;
             transform: translate(-50%, -50%); 
@@ -158,11 +153,6 @@
         .ride-pin {
             width: 18px; height: 18px; background-color: var(--accent-blue);
             border: 2px solid white; border-radius: 50%; 
-        }
-
-        .land-pin {
-            width: 22px; height: 22px; background-color: #ff4d4d; 
-            border: 2px solid white; border-radius: 4px; z-index: 9; 
         }
 
         .map-pin:hover {
@@ -253,8 +243,6 @@
             .app-container { flex-direction: column; overflow: visible; padding-bottom: 140px; }
             .main-content { padding: 15px; overflow: visible; flex: none; }
             .sidebar { min-width: 100%; border-left: none; border-top: 1px solid #282828; padding: 15px; overflow: visible; flex: none; }
-            
-            /* Give the map a defined height on mobile so it doesn't collapse */
             .map-outer-container { height: 60vh; min-height: 400px; flex: none; }
             
             .player-bar { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; grid-template-areas: "info controls" "progress progress"; height: auto; padding: 15px; gap: 10px 15px; }
@@ -348,7 +336,6 @@
         const parkData = {
             mainStreet: {
                 name: "Main Street, U.S.A.", image: "images/Main Street.png", icon: "images/Trolly.png", 
-                mapX: 56.7, mapY: 82, 
                 ambientAudio: ["Audio/MS1.mp3", "Audio/MS2.mp3", "Audio/MS3.mp3", "Audio/MS4.mp3",],
                 rides: {
                     train: { name: "Disneyland Railroad", image: "images/Disneyland Railroad.png", audio: "Audio/Train.mp3", mapX: 56.4, mapY: 89.9 },
@@ -357,7 +344,6 @@
             },
             adventureland: {
                 name: "Adventureland", image: "images/Adventureland.png", icon: "images/IndyCar.png", 
-                mapX: 48.3, mapY: 61.8, 
                 ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
                 rides: {
                     indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", audio: "Audio/IndyRide.mp3", mapX: 40.7, mapY: 69.7 },
@@ -368,7 +354,6 @@
             },
             NewOrleansSquare: {
                 name: "New Orleans Square", image: "images/New Orleans Square.png", icon: "images/FlagIcon.png", 
-                mapX: 30.8, mapY: 67.8, 
                 ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
                 rides: {
                     Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", audio: "Audio/Pirates.mp3", mapX: 34.2, mapY: 71.0 },
@@ -377,7 +362,6 @@
             },
             CritterCountry: {
                 name: "Critter Country", image: "images/Splash Mountain.png", icon: "images/SplashIcon.png", 
-                mapX: 17.4, mapY: 53, 
                 ambientAudio: ["Audio/CC1.mp3","Audio/CC2.mp3","Audio/CC3.mp3", "Audio/CC4.mp3"],
                 rides: {
                     Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", audio: "Audio/Splash.mp3", mapX: 13.9, mapY: 58.4 },
@@ -386,7 +370,6 @@
             },
             Frontierland: {
                 name: "Frontierland", image: "images/Frontierland.png", icon: "images/ThunderIcon.png", 
-                mapX: 41.7, mapY: 56.6, 
                 ambientAudio: ["Audio/Frontier1.mp3", "Audio/Frontier2.mp3", "Audio/Frontier3.mp3"],
                 rides: {
                     BigThunder: { name: "Big Thunder Mountain Railroad", image: "images/Big Thunder Mountain Railroad.png", audio: "Audio/Big Thunder.mp3", mapX: 40, mapY: 45.9 },
@@ -395,7 +378,6 @@
             },
             fantasyland: {
                 name: "Fantasyland", image: "images/Sleeping Beauty Castle.png", icon: "images/CastleIcon.png", 
-                mapX: 56.8, mapY: 48, 
                 ambientAudio: ["Audio/Fantasy1.mp3", "Audio/Fantasy2.mp3", "Audio/Fantasy3.mp3", "Audio/Fantasy4.mp3"],
                 rides: {
                     peterPan: { name: "Peter Pan's Flight", image: "images/Dark Rides 3.png", audio: "Audio/Peter.mp3", mapX: 58.4, mapY: 42 },
@@ -414,7 +396,6 @@
             },
             Toontown: {
                 name: "Toontown", image: "images/Toontown Area Music.png", icon: "images/ToonTownnIcon.png", 
-                mapX: 63.6, mapY: 15.6, 
                 ambientAudio: ["Audio/Toon1.mp3", "Audio/Toon2.mp3"],
                 rides: {
                     Railroad: { name: "Mickey and Minnie's Runaway Railway", image: "images/Runaway.jpg", audio: "Audio/Runaway.mp3", mapX: 63.8, mapY: 9.4 },
@@ -423,7 +404,6 @@
             },
             tomorrowland: {
                 name: "Tomorrowland", image: "images/Tomorrowland.png", icon: "images/Space Icon.png", 
-                mapX: 68.6, mapY: 59, 
                 ambientAudio: ["Audio/TL1.mp3","Audio/TL2.mp3"],
                 rides: {
                     spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", audio: "audio/space_mountain.mp3", mapX: 76.9, mapY: 69.5 },
@@ -468,16 +448,6 @@
             
             for (const landKey in parkData) {
                 const land = parkData[landKey];
-                
-                if (land.mapX && land.mapY) {
-                    const landPin = document.createElement('div');
-                    landPin.className = 'map-pin land-pin';
-                    landPin.style.left = land.mapX + '%';
-                    landPin.style.top = land.mapY + '%';
-                    landPin.setAttribute('data-name', land.name + " (Walkthrough)");
-                    landPin.onclick = () => addToItinerary(landKey, null);
-                    mapPinsContainer.appendChild(landPin);
-                }
 
                 for (const rideKey in land.rides) {
                     const ride = land.rides[rideKey];
@@ -666,6 +636,16 @@
             zoomContainer.style.width = currentZoom + '%';
         }
 
+        // --- Scroll Wheel to Zoom ---
+        mapWrapper.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            if (e.deltaY < 0) {
+                zoomMap(1); 
+            } else {
+                zoomMap(-1); 
+            }
+        }, { passive: false }); 
+
         // --- Mouse Drag to Pan ---
         let isDown = false;
         let startX, startY, scrollLeft, scrollTop;
@@ -691,6 +671,19 @@
             const walkY = (y - startY) * 1.5; 
             mapWrapper.scrollLeft = scrollLeft - walkX;
             mapWrapper.scrollTop = scrollTop - walkY;
+        });
+
+        // --- 📍 TEMPORARY MAP PIN FINDER 📍 ---
+        // Delete this block after you place all your pins!
+        zoomContainer.addEventListener('click', function(event) {
+            // Ignore the click if we actually clicked a pin
+            if(event.target.classList.contains('map-pin')) return; 
+
+            const rect = zoomContainer.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width * 100).toFixed(1);
+            const y = ((event.clientY - rect.top) / rect.height * 100).toFixed(1);
+            
+            alert(`📍 Coordinates for this spot:\n\nmapX: ${x}, mapY: ${y}`);
         });
 
     </script>
