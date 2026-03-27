@@ -267,6 +267,7 @@
         .np-text {
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         #np-title {
@@ -274,11 +275,17 @@
             font-weight: bold;
             color: var(--text-main);
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         #np-subtitle {
             font-size: 14px; 
             color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* --- CENTER CONTROLS & SVG BUTTONS --- */
@@ -411,19 +418,11 @@
             width: 160px; 
         }
 
-        #vol-icon {
-            font-size: 20px;
-            color: var(--text-muted);
-        }
+        #vol-icon { font-size: 20px; color: var(--text-muted); }
 
         #volume-slider {
-            flex: 1;
-            -webkit-appearance: none;
-            background: transparent;
-            height: 24px;
-            cursor: pointer;
+            flex: 1; -webkit-appearance: none; background: transparent; height: 24px; cursor: pointer;
         }
-
         #volume-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
         #volume-slider::-moz-range-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
 
@@ -431,26 +430,98 @@
             -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background-color: transparent;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
             background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -10px; 
-            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
         }
-        #volume-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.3) rotate(15deg); 
-            filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff);
-        }
+        #volume-slider::-webkit-slider-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
         #volume-slider::-moz-range-thumb {
             height: 24px; width: 24px; border-radius: 50%; border: none; background-color: transparent;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
             background-size: contain; background-repeat: no-repeat; background-position: center;
-            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
         }
-        #volume-slider::-moz-range-thumb:hover {
-            transform: scale(1.3) rotate(15deg);
-            filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff);
-        }
+        #volume-slider::-moz-range-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
 
         .hidden-player { display: none; }
+
+        /* =========================================
+           ✨ NEW: MOBILE RESPONSIVENESS LOGIC ✨ 
+           ========================================= */
+        @media (max-width: 850px) {
+            /* 1. Let the whole screen scroll naturally instead of trapping the user */
+            body { overflow-y: auto; }
+            
+            /* 2. Stack the grid and the queue vertically */
+            .app-container { 
+                flex-direction: column; 
+                overflow: visible; 
+                padding-bottom: 140px; 
+            }
+            .main-content { padding: 15px; overflow: visible; flex: none; }
+            .sidebar { 
+                min-width: 100%; 
+                border-left: none; 
+                border-top: 1px solid #282828; 
+                padding: 15px; 
+                overflow: visible; 
+                flex: none;
+            }
+            
+            /* 3. Make tiles fit nicely on small phone screens */
+            .tile-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            
+            /* 4. Transform the Player Bar into a Spotify Mobile Layout */
+            .player-bar {
+                display: grid;
+                grid-template-columns: 1fr auto; /* Left side info, Right side buttons */
+                grid-template-rows: auto auto;
+                grid-template-areas: 
+                    "info controls"
+                    "progress progress"; /* Progress bar stretches across the bottom */
+                height: auto;
+                padding: 15px;
+                gap: 10px 15px;
+            }
+            
+            /* Align the Art and Text */
+            .now-playing-info {
+                grid-area: info;
+                width: 100%;
+                min-width: 0; /* Crucial for text truncation */
+            }
+            #np-image { width: 50px; height: 50px; margin-right: 12px; }
+            #np-title { font-size: 15px; }
+            #np-subtitle { font-size: 12px; }
+
+            /* 5. Magic CSS to pull the buttons and progress bar out of their wrapper */
+            .player-center {
+                display: contents; 
+            }
+            .player-controls {
+                grid-area: controls;
+                margin-bottom: 0;
+                gap: 15px;
+            }
+            .progress-container {
+                grid-area: progress;
+                margin-top: 5px;
+            }
+            
+            /* 6. Hide volume on mobile - Users use their physical phone buttons! */
+            .player-right { display: none; }
+
+            /* 7. Scale down massive UI elements to fit the phone */
+            #play-pause-btn { width: 50px; height: 50px; border-width: 2px; }
+            #skip-btn { width: 40px; height: 40px; }
+            .control-btn svg { width: 24px; height: 24px; }
+            #skip-btn svg { width: 18px; height: 18px; }
+            
+            #progress-slider { height: 36px; margin: 0 10px; }
+            #progress-slider::-webkit-slider-thumb { height: 36px; width: 36px; margin-top: -14px; }
+            #progress-slider::-moz-range-thumb { height: 36px; width: 36px; margin-top: -14px; }
+            
+            /* 8. Make queue trash icons always visible on mobile since there is no "hover" */
+            .remove-item-btn { opacity: 0.8; font-size: 20px; padding: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -644,7 +715,7 @@
         let itinerary = []; 
         let playbackQueue = []; 
         let nextItemId = 0; 
-        let isWalkthroughActive = false; // NEW: Tracks if the live session is running
+        let isWalkthroughActive = false;
 
         const player1 = document.getElementById('player-1');
         const player2 = document.getElementById('player-2');
@@ -709,7 +780,7 @@
 
         renderLands();
 
-        // --- UPDATED LIVE QUEUE ADDITION ---
+        // --- QUEUE MANAGEMENT LOGIC ---
         function addToItinerary() {
             if (!currentSelectedLand) {
                 alert("Please select a land first!");
@@ -742,11 +813,9 @@
             
             itineraryList.appendChild(li);
 
-            // NEW: If Walkthrough is already running, dynamically inject the tracks into the live player!
             if (isWalkthroughActive) {
                 const randomAmbient = landData.ambientAudio[Math.floor(Math.random() * landData.ambientAudio.length)];
                 
-                // Add the ambient walking step
                 playbackQueue.push({
                     audio: randomAmbient,
                     image: landData.image,
@@ -756,7 +825,6 @@
                     targetId: "itinerary-item-" + itemId
                 });
 
-                // Add the ride step if they selected one
                 if (currentSelectedRide) {
                     const rideData = landData.rides[currentSelectedRide];
                     playbackQueue.push({
@@ -769,7 +837,6 @@
                     });
                 }
 
-                // If the player went to sleep because the queue emptied out, wake it back up!
                 if (playPauseBtn.style.display === 'none') {
                     skipBtn.style.display = 'flex';
                     playPauseBtn.style.display = 'flex'; 
@@ -781,21 +848,18 @@
                 }
             }
 
-            // Cleanup builder UI
             currentSelectedLand = "";
             currentSelectedRide = "";
             document.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
             ridesSection.style.display = "none";
         }
 
-        // --- UPDATED LIVE QUEUE DELETION ---
         function removeFromItinerary(id) {
             const li = document.getElementById("itinerary-item-" + id);
-            const wasActive = li && li.classList.contains('active-item'); // Check if they are deleting the song currently playing
+            const wasActive = li && li.classList.contains('active-item'); 
 
-            if (li) li.remove(); // Remove visual
+            if (li) li.remove(); 
 
-            // Remove from background arrays
             itinerary = itinerary.filter(item => item.id !== id);
             playbackQueue = playbackQueue.filter(step => step.targetId !== "itinerary-item-" + id);
 
@@ -803,14 +867,13 @@
                 itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
             }
 
-            // NEW: If they delete the song that is actively playing, gracefully skip to the next track!
             if (wasActive) {
                 skipStep(); 
             }
         }
 
         function clearItinerary() {
-            isWalkthroughActive = false; // Reset live session status
+            isWalkthroughActive = false; 
             itinerary = [];
             playbackQueue = [];
             nextItemId = 0; 
@@ -838,7 +901,7 @@
                 return;
             }
 
-            isWalkthroughActive = true; // Mark session as live so new additions are injected automatically
+            isWalkthroughActive = true; 
             playbackQueue = []; 
 
             itinerary.forEach(item => {
@@ -923,7 +986,6 @@
                 progressContainer.style.display = 'none';
                 volumeContainer.style.display = 'none';
                 fadeOutSingle(currentPlayer);
-                // We deliberately leave isWalkthroughActive = true, so if they add a song now, it wakes right back up!
                 return;
             }
 
