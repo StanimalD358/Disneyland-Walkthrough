@@ -28,6 +28,87 @@
             height: 100vh;
             overflow: hidden;
         }
+        
+/* --- MASSIVE PICTURE SCRUBBER --- */
+        .progress-container {
+            display: none; 
+            align-items: center;
+            width: 100%;
+        }
+
+        #time-current, #time-total {
+            font-size: 14px; 
+            color: var(--text-muted);
+            min-width: 50px;
+        }
+        #time-current { text-align: right; }
+        #time-total { text-align: left; }
+
+        #progress-slider {
+            flex: 1;
+            margin: 0 20px; 
+            cursor: pointer;
+            -webkit-appearance: none; 
+            background: transparent; 
+            height: 48px; 
+            --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
+        }
+
+        #progress-slider::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
+        #progress-slider::-moz-range-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
+
+        #progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
+            background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; 
+            margin-top: -20px; 
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s;
+        }
+        #progress-slider::-moz-range-thumb {
+            height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
+            background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent;
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s;
+        }
+
+        /* --- PIXIE DUST VOLUME SLIDER --- */
+        .player-right {
+            width: 30%;
+            min-width: 320px; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+        }
+
+        .volume-container {
+            display: none; 
+            align-items: center;
+            gap: 12px;
+            width: 160px; 
+        }
+
+        #vol-icon { font-size: 20px; color: var(--text-muted); }
+
+        #volume-slider {
+            flex: 1; -webkit-appearance: none; background: transparent; height: 24px; cursor: pointer;
+        }
+        #volume-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
+        #volume-slider::-moz-range-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
+
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background-color: transparent;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
+            background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -10px; 
+            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+        }
+        #volume-slider::-webkit-slider-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
+        #volume-slider::-moz-range-thumb {
+            height: 24px; width: 24px; border-radius: 50%; border: none; background-color: transparent;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+        }
+        #volume-slider::-moz-range-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
+
+        .hidden-player { display: none; }
 
         /* --- MAIN APP LAYOUT --- */
         .app-container { display: flex; flex: 1; overflow: hidden; padding-bottom: 120px; }
@@ -241,7 +322,7 @@
                 name: "Main Street, U.S.A.", image: "images/Main Street.png", icon: "images/Trolly.png", 
                 ambientAudio: ["Audio/MS1.mp3", "Audio/MS2.mp3", "Audio/MS3.mp3", "Audio/MS4.mp3"],
                 rides: {
-                    train: { name: "Disneyland Railroad", image: "images/Disneyland Railroad.png", mapX: 56.4, mapY: 89.9, audioTracks: [{title: "On-Ride POV", file: "Audio/Train.mp3"}, {title: "Grand Circle Tour", file: "Audio/Train_Tour.mp3"}] },
+                    train: { name: "Disneyland Railroad", image: "images/Disneyland Railroad.png", mapX: 56.4, mapY: 89.9, audioTracks: [{title: "On-Ride POV", file: "Audio/Train.mp3"}] },
                     cinema: { name: "Main Street Shops", image: "images/Main Street Emporium.png", mapX: 54.9, mapY: 77.3, audioTracks: [{title: "Store Music", file: "Audio/Shops.mp3"}] }
                 }
             },
@@ -249,9 +330,9 @@
                 name: "Adventureland", image: "images/Adventureland.png", icon: "images/IndyCar.png", 
                 ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
                 rides: {
-                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", mapX: 40.7, mapY: 69.7, audioTracks: [{title: "Ride POV", file: "Audio/IndyRide.mp3"}, {title: "Queue Audio", file: "Audio/IndyQueue.mp3"}] },
+                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", mapX: 40.7, mapY: 69.7, audioTracks: [{title: "Ride POV", file: "Audio/IndyRide.mp3"}] },
                     jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", mapX: 44.7, mapY: 68.5, audioTracks: [{title: "Skipper Audio", file: "Audio/Jungle.mp3"}] },
-                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", mapX: 48.9, mapY: 64.8, audioTracks: [{title: "Full Show", file: "Audio/TikiRoom.mp3"}] },
+                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", mapX: 48.9, mapY: 64.8, audioTracks: [{title: "Full Show", file: "Audio/TikiRoom.mp3"},{title: "Tiki Room Only", file: "Audio/TikiRoomShort.mp3"}] },
                     Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", mapX: 38.2, mapY: 71.1, audioTracks: [{title: "Walkthrough", file: "Audio/Tarzan.mp3"}] }
                 }
             },
@@ -259,8 +340,8 @@
                 name: "New Orleans Square", image: "images/New Orleans Square.png", icon: "images/FlagIcon.png", 
                 ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
                 rides: {
-                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", mapX: 34.2, mapY: 71.0, audioTracks: [{title: "Ride POV", file: "Audio/Pirates.mp3"}, {title: "Queue Music", file: "Audio/PiratesQueue.mp3"}] },
-                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", mapX: 17.7, mapY: 64, audioTracks: [{title: "Ghost Host POV", file: "Audio/Haunted.mp3"}, {title: "Foyer Music", file: "Audio/HauntedFoyer.mp3"}] }
+                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", mapX: 34.2, mapY: 71.0, audioTracks: [{title: "Full Ride", file: "Audio/Pirates.mp3"}, {title: "Short Ride", file: "Audio/PiratesShort.mp3"}] },
+                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", mapX: 17.7, mapY: 64, audioTracks: [{title: "Full Ride", file: "Audio/Haunted.mp3"}, {title: "Short Ride", file: "Audio/HauntedShort.mp3"}] }
                 }
             },
             CritterCountry: {
@@ -283,12 +364,12 @@
                 name: "Fantasyland", image: "images/Sleeping Beauty Castle.png", icon: "images/CastleIcon.png", 
                 ambientAudio: ["Audio/Fantasy1.mp3", "Audio/Fantasy2.mp3", "Audio/Fantasy3.mp3", "Audio/Fantasy4.mp3"],
                 rides: {
-                    peterPan: { name: "Peter Pan's Flight", image: "images/Dark Rides 3.png", mapX: 58.4, mapY: 42, audioTracks: [{title: "Ride POV", file: "Audio/Peter.mp3"}, {title: "Queue Audio", file: "Audio/PeterQueue.mp3"}] },
-                    smallWorld: { name: "It's a Small World", image: "images/It_s a Small World.png", mapX: 69.7, mapY: 24, audioTracks: [{title: "Ride POV", file: "Audio/SmallWorld.mp3"}] },
+                    peterPan: { name: "Peter Pan's Flight", image: "images/Dark Rides 3.png", mapX: 58.4, mapY: 42, audioTracks: [{title: "Ride POV", file: "Audio/Peter.mp3"}] },
+                    smallWorld: { name: "It's a Small World", image: "images/It_s a Small World.png", mapX: 69.7, mapY: 24, audioTracks: [{title: "Full Ride", file: "Audio/SmallWorld.mp3"},{title: "Ride", file: "Audio/SmallWorldShort.mp3"}] },
                     Snowwhite: { name: "Snow White", image: "images/Dark Rides 1.png", mapX: 54.6, mapY: 42.9, audioTracks: [{title: "Ride POV", file: "Audio/Snow.mp3"}] },
                     Dumbo: { name: "Dumbo The Flying Elephant", image: "images/Dumbo Flying Elephants.png", mapX: 57.2, mapY: 35.8, audioTracks: [{title: "Ride POV", file: "Audio/Dumbo.mp3"}] },
                     Toads: { name: "Mr. Toads Wild Ride", image: "images/Dark Rides 4.png", mapX: 60.2, mapY: 39.7, audioTracks: [{title: "Ride POV", file: "Audio/Toads.mp3"}] },
-                    Matterhorn: { name: "Matterhorn", image: "images/Matterhorn Bobsleds.png", mapX: 70, mapY: 43.3, audioTracks: [{title: "Left Track POV", file: "Audio/Matterhron.mp3"}, {title: "Right Track POV", file: "Audio/Matterhron2.mp3"}] },
+                    Matterhorn: { name: "Matterhorn", image: "images/Matterhorn Bobsleds.png", mapX: 70, mapY: 43.3, audioTracks: [{title: "Left Track POV", file: "Audio/Matterhron.mp3"}] },
                     Story: { name: "Storybook Canal Boats", image: "images/Storybook Land.png", mapX: 66.1, mapY: 35.1, audioTracks: [{title: "Tour Guide", file: "Audio/Storybook.mp3"}] },
                     Carrousel: { name: "King Arthur Carrousel", image: "images/Carrousel.jpg", mapX: 56.6, mapY: 39.7, audioTracks: [{title: "Ride Music", file: "Audio/Carrousel.mp3"}] },
                     Pinnocchio: { name: "Pinocchio's Journey", image: "images/Dark Rides 2.png", mapX: 54, mapY: 41.3, audioTracks: [{title: "Ride POV", file: "Audio/Pinocchios.mp3"}] },
@@ -309,10 +390,10 @@
                 name: "Tomorrowland", image: "images/Tomorrowland.png", icon: "images/Space Icon.png", 
                 ambientAudio: ["Audio/TL1.mp3","Audio/TL2.mp3"],
                 rides: {
-                    spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", mapX: 76.9, mapY: 69.5, audioTracks: [{title: "Michael Giacchino Score", file: "audio/space_mountain.mp3"}, {title: "Dick Dale Score", file: "audio/space_mountain_old.mp3"}] },
-                    starTours: { name: "Star Tours", image: "images/Star Tours.png", mapX: 69.2, mapY: 60.7, audioTracks: [{title: "Ride POV", file: "audio/star_tours.mp3"}, {title: "Queue Droids", file: "audio/star_tours_queue.mp3"}] },
+                    spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", mapX: 76.9, mapY: 69.5, audioTracks: [{title: "Original Ride Audio", file: "Audio/OldSpace.mp3"}, {title: "New Ride Audio", file: "Audio/SpaceNew.mp3"}] },
+                    starTours: { name: "Star Tours", image: "images/Star Tours.png", mapX: 69.2, mapY: 60.7, audioTracks: [{title: "Full Ride", file: "Audio/StarTours.mp3.mp3"},{title: "Ride Score", file: "Audio/StarToursScore.mp3"}] },
                     Buzz: { name: "Astro Blasters", image: "images/Buzz.png", mapX: 73.3, mapY: 56.3, audioTracks: [{title: "Ride POV", file: "Audio/Buzz.mp3"}] },
-                    Carousel: { name: "Carousel of Progress", image: "images/Carousel of Progress.png", mapX: 86.9, mapY: 58.3, audioTracks: [{title: "Full Show", file: "audio/carousel.mp3"}] },
+                    Carousel: { name: "Carousel of Progress", image: "images/Carousel of Progress.png", mapX: 86.9, mapY: 58.3, audioTracks: [{title: "Full Show", file: "audio/FullCarousel.mp3"},{title: "Great Big Beautiful Tomorrow", file: "audio/GreatBig.mp3"}]},
                }
             }
         };
@@ -574,7 +655,47 @@
         function fadeOutSingle(player) { clearInterval(fadeInterval); let progress = 1; fadeInterval = setInterval(() => { progress -= 0.05; if (progress <= 0) { clearInterval(fadeInterval); player.volume = 0; player.pause(); } else { player.volume = progress * masterVolume; } }, 100); }
         player1.onended = function() { playNextInQueue(); }; player2.onended = function() { playNextInQueue(); };
 
+ // --- SLIDER AND TIME TRACKING LOGIC ---
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return m + ":" + (s < 10 ? "0" + s : s);
+        }
 
+        function updateSliderProgress(e) {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            if (e.target !== currentPlayer) return;
+
+            const current = currentPlayer.currentTime;
+            const duration = currentPlayer.duration;
+            
+            timeCurrent.textContent = formatTime(current);
+            if (duration) {
+                timeTotal.textContent = formatTime(duration);
+                progressSlider.max = duration;
+                progressSlider.value = current;
+            }
+        }
+
+        player1.addEventListener('timeupdate', updateSliderProgress);
+        player2.addEventListener('timeupdate', updateSliderProgress);
+
+        progressSlider.addEventListener('input', (e) => {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            const seekTime = e.target.value;
+            currentPlayer.currentTime = seekTime;
+            timeCurrent.textContent = formatTime(seekTime);
+        });
+         // --- VOLUME CONTROL LOGIC ---
+        volumeSlider.addEventListener('input', (e) => {
+            masterVolume = e.target.value / 100;
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            if (!currentPlayer.paused) {
+                currentPlayer.volume = masterVolume;
+            }
+        });
+        
         // --- ZOOM & PAN JAVASCRIPT --- 
         let currentZoom = 100; 
         const zoomContainer = document.getElementById('map-zoom-container');
