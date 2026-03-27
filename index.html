@@ -34,7 +34,7 @@
             display: flex;
             flex: 1;
             overflow: hidden;
-            padding-bottom: 90px; /* Space for the bottom player */
+            padding-bottom: 90px; 
         }
 
         .main-content {
@@ -63,7 +63,7 @@
             margin-top: 20px;
         }
 
-        /* --- TILE GRID (ALBUM COVERS) --- */
+        /* --- TILE GRID --- */
         .tile-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -203,7 +203,7 @@
             border-radius: 4px;
             object-fit: cover;
             margin-right: 15px;
-            display: none; /* Hidden until playing */
+            display: none; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
@@ -224,24 +224,115 @@
             color: var(--text-muted);
         }
 
-        .player-controls {
+        /* --- CENTER CONTROLS & DYNAMIC SLIDER --- */
+        .player-center {
             flex: 1;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            max-width: 40%;
+            margin: 0 auto;
+        }
+
+        .player-controls {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .control-btn {
             background: transparent;
             color: var(--text-muted);
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             transition: color 0.2s, transform 0.2s;
+            display: none; 
         }
         .control-btn:hover { color: var(--text-main); transform: scale(1.1); }
         
-        #skip-btn { display: none; } /* Hidden until playing */
+        #play-pause-btn { font-size: 28px; color: var(--text-main); } 
+
+        .progress-container {
+            display: none; 
+            align-items: center;
+            width: 100%;
+        }
+
+        #time-current, #time-total {
+            font-size: 11px;
+            color: var(--text-muted);
+            min-width: 40px;
+        }
+        #time-current { text-align: right; }
+        #time-total { text-align: left; }
+
+        /* --- CUSTOM DYNAMIC SLIDER STYLING (NEW PICTURE THUMB) --- */
+        #progress-slider {
+            flex: 1;
+            margin: 0 10px;
+            cursor: pointer;
+            -webkit-appearance: none; 
+            background: transparent; 
+            height: 4px;
+            /* Default icon if JS fails, user must ensure images exist */
+            --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
+        }
+
+        /* Slider Track */
+        #progress-slider::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+        }
+        #progress-slider::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+        }
+
+        /* Slider Thumb (The "Dot" - Updated to be a Picture) */
+        #progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px; /* Slightly larger to fit pictures */
+            width: 20px;
+            border-radius: 50%;
+            
+            /* --- NEW PICTURE LOGIC --- */
+            background-image: var(--thumb-icon);
+            background-size: contain; /* ensures image fits within the 20x20 circle */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: transparent; /* Makes the backing of the thumb clear */
+            /* ------------------------- */
+            
+            margin-top: -8px; /* Adjusted centering for new size */
+            
+            /* Standard golden magical glow (kept from color dot version) */
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.7); 
+            transition: background-image 0.3s, box-shadow 0.3s;
+        }
+        #progress-slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background-image: var(--thumb-icon);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: transparent;
+            border: none;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+            transition: background-image 0.3s, box-shadow 0.3s;
+        }
+
+        .player-right {
+            width: 30%;
+        }
 
         .hidden-player { display: none; }
     </style>
@@ -283,19 +374,33 @@
             </div>
         </div>
         
-        <div class="player-controls">
-            <button id="skip-btn" class="control-btn" onclick="skipStep()" title="Skip to Next">⏭️</button>
+        <div class="player-center">
+            <div class="player-controls">
+                <button id="play-pause-btn" class="control-btn" onclick="togglePlayPause()" title="Pause">⏸️</button>
+                <button id="skip-btn" class="control-btn" onclick="skipStep()" title="Skip to Next">⏭️</button>
+            </div>
+            
+            <div class="progress-container" id="progress-container">
+                <span id="time-current">0:00</span>
+                <input type="range" id="progress-slider" min="0" value="0" step="1">
+                <span id="time-total">0:00</span>
+            </div>
         </div>
+
+        <div class="player-right"></div>
     </div>
 
     <audio id="player-1" class="hidden-player"></audio>
     <audio id="player-2" class="hidden-player"></audio>
 
     <script>
+        // --- YOUR AUDIO DATA (UPDATED WITH ICON PICTURE PATHS) ---
         const parkData = {
             mainStreet: {
                 name: "Main Street, U.S.A.",
                 image: "images/main_street.jpg",
+                 // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["Audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
                 rides: {
                     train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },
@@ -305,35 +410,43 @@
             adventureland: {
                 name: "Adventureland",
                 image: "images/Adventureland.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
                 rides: {
                     indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", audio: "Audio/IndyRide.mp3" },
                     jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", audio: "Audio/Jungle.mp3" },
-                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", audio: "Audio/RikiRoom.mp3" },
+                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", audio: "Audio/TikiRoom.mp3" },
                     Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", audio: "Audio/Tarzan.mp3" }
                 }
             },
             NewOrleansSquare: {
                 name: "New Orleans Square",
                 image: "images/New Orleans Square.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
                 rides: {
                     Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", audio: "Audio/Pirates.mp3" },
-                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", audio: "Audio/Haunted.mp3", }
+                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", audio: "Audio/Haunted.mp3" }
                 }
             },
             CritterCountry: {
                 name: "Critter Country",
                 image: "images/Splash Mountain.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["Audio/CC1.mp3","Audio/CC2.mp3","Audio/CC3.mp3", "Audio/CC4.mp3"],
                 rides: {
-                    Splash: { name: "Indiana Jones Adventure", image: "Splash Mountain.png", audio: "Audio/Splash.mp3" },
+                    Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", audio: "Audio/Splash.mp3" },
                     WinnieThePooh: { name: "Winnie The Pooh", image: "images/The Many Adventures of Winnie the Pooh.png", audio: "Audio/Pooh.mp3" }
                 }
             },
             Frontierland: {
                 name: "Frontierland",
                 image: "images/adventureland.jpg",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
                 rides: {
                     BigThunder: { name: "Big Thunder Mountain Railroad", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
@@ -343,6 +456,8 @@
             fantasyland: {
                 name: "Fantasyland",
                 image: "images/fantasyland.jpg",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["audio/fantasy_bgm1.mp3"],
                 rides: {
                     peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },
@@ -362,6 +477,8 @@
             Toontown: {
                 name: "Toontown",
                 image: "images/adventureland.jpg",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
                 rides: {
                     Railroad: { name: "Mickey and Minnie's Runaway Railway", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
@@ -371,6 +488,8 @@
             tomorrowland: {
                 name: "Tomorrowland",
                 image: "images/tomorrowland.jpg",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["audio/tomorrow_bgm1.mp3"],
                 rides: {
                     spaceMountain: { name: "Space Mountain", image: "images/space.jpg", audio: "audio/space_mountain.mp3" },
@@ -392,6 +511,11 @@
         const npSubtitle = document.getElementById('np-subtitle');
         const npImage = document.getElementById('np-image');
         const skipBtn = document.getElementById('skip-btn');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressSlider = document.getElementById('progress-slider');
+        const timeCurrent = document.getElementById('time-current');
+        const timeTotal = document.getElementById('time-total');
 
         let currentSelectedLand = "";
         let currentSelectedRide = "";
@@ -468,7 +592,7 @@
             }
 
             if (itinerary.length === 0) {
-                itineraryList.innerHTML = ''; // Clear empty message
+                itineraryList.innerHTML = ''; 
             }
 
             const landData = parkData[currentSelectedLand];
@@ -479,7 +603,6 @@
             itinerary.push({ land: currentSelectedLand, ride: currentSelectedRide, index: itemIndex });
 
             const li = document.createElement('li');
-            // Format queue text
             li.innerHTML = `<strong>${titleText}</strong> &nbsp; <span style="font-size: 12px; color: #777;">(${subtitleText})</span>`;
             li.id = "itinerary-item-" + itemIndex; 
             itineraryList.appendChild(li);
@@ -506,6 +629,8 @@
             player2.src = '';
             
             skipBtn.style.display = 'none';
+            playPauseBtn.style.display = 'none';
+            progressContainer.style.display = 'none';
         }
 
         function startWalkthrough() {
@@ -523,6 +648,7 @@
                 playbackQueue.push({
                     audio: randomAmbient,
                     image: landData.image,
+                    landIcon: landData.icon, // Pass the new picture icon path along
                     title: `Walking through ${landData.name}`,
                     subtitle: "Atmosphere",
                     targetId: "itinerary-item-" + item.index
@@ -533,6 +659,7 @@
                     playbackQueue.push({
                         audio: rideData.audio,
                         image: rideData.image,
+                        landIcon: landData.icon, // Also use land icon while on the ride
                         title: rideData.name,
                         subtitle: landData.name,
                         targetId: "itinerary-item-" + item.index
@@ -547,13 +674,32 @@
             playbackQueue.push({
                 audio: finalAmbient,
                 image: lastLandData.image,
+                landIcon: lastLandData.icon, // Use the final land's icon
                 title: `Exiting into ${lastLandData.name}`,
                 subtitle: "Atmosphere",
                 targetId: "itinerary-item-" + lastItem.index
             });
 
             skipBtn.style.display = 'inline-block';
+            playPauseBtn.style.display = 'inline-block'; 
+            playPauseBtn.textContent = '⏸️'; 
+            progressContainer.style.display = 'flex';
             playNextInQueue();
+        }
+
+        // --- PLAY/PAUSE LOGIC ---
+        function togglePlayPause() {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            
+            if (currentPlayer.paused) {
+                currentPlayer.play();
+                playPauseBtn.textContent = '⏸️';
+                playPauseBtn.title = 'Pause';
+            } else {
+                currentPlayer.pause();
+                playPauseBtn.textContent = '▶️';
+                playPauseBtn.title = 'Play';
+            }
         }
 
         function skipStep() { playNextInQueue(); }
@@ -570,6 +716,8 @@
                 npSubtitle.textContent = "Hope you had a magical day!";
                 npImage.style.display = "none";
                 skipBtn.style.display = 'none';
+                playPauseBtn.style.display = 'none';
+                progressContainer.style.display = 'none';
                 fadeOutSingle(currentPlayer);
                 return;
             }
@@ -581,7 +729,6 @@
                 if (activeListItem) activeListItem.classList.add('active-item');
             }
 
-            // Update Player UI Bar
             npTitle.textContent = currentStep.title;
             npSubtitle.textContent = currentStep.subtitle;
             
@@ -592,8 +739,24 @@
                 npImage.style.display = 'none';
             }
 
+            // --- THE PICTURE SCRUB BAR MAGIC ---
+            if (currentStep.landIcon) {
+                // 👉 This injects the new land picture path into the CSS variable
+                progressSlider.style.setProperty('--thumb-icon', `url('${currentStep.landIcon}')`);
+            } else {
+                // Fallback icon if data is missing (should not happen with default data)
+                progressSlider.style.setProperty('--thumb-icon', `url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>')`);
+            }
+            // ------------------------------------
+
             nextPlayer.src = currentStep.audio;
             nextPlayer.volume = 0; 
+            
+            // Reset slider before playing new track
+            progressSlider.value = 0;
+            timeCurrent.textContent = "0:00";
+            
+            playPauseBtn.textContent = '⏸️';
             
             nextPlayer.play().then(() => {
                 if (!currentPlayer.paused && currentPlayer.src) {
@@ -607,6 +770,40 @@
             });
         }
 
+        // --- SLIDER AND TIME TRACKING LOGIC ---
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return m + ":" + (s < 10 ? "0" + s : s);
+        }
+
+        function updateSliderProgress(e) {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            if (e.target !== currentPlayer) return;
+
+            const current = currentPlayer.currentTime;
+            const duration = currentPlayer.duration;
+            
+            timeCurrent.textContent = formatTime(current);
+            if (duration) {
+                timeTotal.textContent = formatTime(duration);
+                progressSlider.max = duration;
+                progressSlider.value = current;
+            }
+        }
+
+        player1.addEventListener('timeupdate', updateSliderProgress);
+        player2.addEventListener('timeupdate', updateSliderProgress);
+
+        progressSlider.addEventListener('input', (e) => {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            const seekTime = e.target.value;
+            currentPlayer.currentTime = seekTime;
+            timeCurrent.textContent = formatTime(seekTime);
+        });
+
+        // --- CROSSFADING LOGIC ---
         function crossfade(fadeOutPlayer, fadeInPlayer) {
             clearInterval(fadeInterval);
             let volume = 0;
