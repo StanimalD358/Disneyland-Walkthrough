@@ -13,48 +13,116 @@
             padding: 30px;
         }
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        select, button {
-            padding: 10px;
-            margin: 10px;
-            font-size: 16px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+        
+        /* --- NEW TILE GRID STYLES --- */
+        .section-title {
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #444;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            text-align: left;
         }
-        button {
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .tile {
+            position: relative;
+            height: 120px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            background-color: #ddd; /* Fallback color if image is missing */
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        .tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .tile:hover img {
+            opacity: 0.9;
+        }
+        .tile.selected {
+            border-color: #0066cc;
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.4);
+            transform: scale(1.03);
+        }
+        .tile.selected img {
+            opacity: 1;
+        }
+        .tile-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 8px 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* --- BUTTONS & ITINERARY STYLES --- */
+        .action-btn {
             background-color: #0066cc;
             color: white;
-            cursor: pointer;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
             border: none;
+            cursor: pointer;
             font-weight: bold;
+            transition: background 0.2s;
         }
-        button:hover {
-            background-color: #004c99;
-        }
+        .action-btn:hover { background-color: #004c99; }
+        
         .start-btn {
             background-color: #28a745;
             width: 100%;
-            font-size: 18px;
-            padding: 15px;
-            margin-top: 20px;
+            font-size: 20px;
+            padding: 18px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
         }
-        .start-btn:hover {
-            background-color: #218838;
-        }
+        .start-btn:hover { background-color: #218838; }
+        
         .clear-btn {
             background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
             font-size: 14px;
             padding: 8px 15px;
+            cursor: pointer;
+            margin-top: 10px;
         }
-        .clear-btn:hover {
-            background-color: #c82333;
-        }
+        .clear-btn:hover { background-color: #c82333; }
+
         #skip-btn {
             background-color: #ff9800; 
             display: none; 
@@ -62,30 +130,36 @@
             width: 100%;
             font-size: 16px;
             padding: 12px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
         }
-        #skip-btn:hover {
-            background-color: #e68a00;
-        }
+        #skip-btn:hover { background-color: #e68a00; }
+
         #itinerary-container {
             text-align: left;
             background: #fdfdfd;
             border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
         }
         #itinerary-list {
             padding-left: 0;
+            margin-top: 10px;
         }
         #itinerary-list li {
             list-style-type: none;
-            padding: 10px;
-            margin-bottom: 5px;
+            padding: 12px;
+            margin-bottom: 8px;
             background-color: #fff;
             border: 1px solid #eee;
-            border-radius: 4px;
+            border-radius: 6px;
             border-left: 5px solid transparent;
             transition: all 0.3s ease;
+            font-size: 16px;
         }
         .active-item {
             background-color: #fff3cd !important;
@@ -93,12 +167,13 @@
             border-left: 5px solid #ffc107 !important;
             transform: scale(1.02);
         }
+        
         #story-box {
             margin-top: 30px;
             padding: 20px;
             background-color: #e9ecef;
             border-radius: 8px;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             line-height: 1.5;
             min-height: 60px;
@@ -109,9 +184,8 @@
             border-radius: 8px;
             margin-top: 20px;
             display: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        /* Hide the audio players since we handle them via code now */
         .hidden-player {
             display: none;
         }
@@ -121,25 +195,21 @@
 
     <div class="container">
         <h1>Disneyland Walkthrough Builder</h1>
-        <p>Design your day. Add lands and rides to your itinerary, then press Start!</p>
+        <p>Tap a land, optionally tap a ride, and add it to your itinerary!</p>
 
-        <!-- Dropdowns -->
-        <select id="land-select" onchange="updateRides()">
-            <option value="">-- Choose a Land --</option>
-            <option value="mainStreet">Main Street, U.S.A.</option>
-            <option value="adventureland">Adventureland</option>
-            <option value="fantasyland">Fantasyland</option>
-            <option value="tomorrowland">Tomorrowland</option>
-        </select>
+        <h3 class="section-title">1. Choose a Land</h3>
+        <div id="lands-grid" class="tile-grid">
+            </div>
 
-        <select id="ride-select">
-            <option value="">-- Choose a Ride (Optional) --</option>
-        </select>
+        <div id="rides-section" style="display: none;">
+            <h3 class="section-title">2. Choose a Ride (Optional)</h3>
+            <div id="rides-grid" class="tile-grid">
+                </div>
+        </div>
 
-        <button onclick="addToItinerary()">Add to Itinerary</button>
-
+        <button class="action-btn" onclick="addToItinerary()">➕ Add to Itinerary</button>
         <div id="itinerary-container">
-            <h3>Your Plan:</h3>
+            <h3 style="margin-top: 0;">Your Plan:</h3>
             <ul id="itinerary-list"></ul>
             <button class="clear-btn" onclick="clearItinerary()">🗑️ Clear Itinerary</button>
         </div>
@@ -151,7 +221,6 @@
         
         <button id="skip-btn" onclick="skipStep()">⏭️ Skip to Next</button>
 
-        <!-- Two hidden audio players for DJ-style crossfading -->
         <audio id="player-1" class="hidden-player"></audio>
         <audio id="player-2" class="hidden-player"></audio>
     </div>
@@ -161,7 +230,7 @@
             mainStreet: {
                 name: "Main Street, U.S.A.",
                 image: "images/main_street.jpg",
-                ambientAudio: ["Audio/Main Street2.mp3", "Audio/Mainstreet3.mp3"],
+                ambientAudio: ["audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
                 rides: {
                     train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },
                     cinema: { name: "Main Street Cinema", image: "images/cinema.jpg", audio: "audio/cinema_bgm.mp3" }
@@ -170,19 +239,19 @@
             adventureland: {
                 name: "Adventureland",
                 image: "images/adventureland.jpg",
-                ambientAudio: ["Audio/Adventureland 1.mp3", "Audio/Adventureland 2.mp3"],
+                ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
                 rides: {
-                    indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "Audio/Indiana.mp3" },
-                    jungle: { name: "The Tiki Room", image: "images/jungle.jpg", audio: "Audio/Tiki Room.mp3" }
+                    indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
+                    jungle: { name: "Jungle Cruise", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
                 }
             },
             fantasyland: {
                 name: "Fantasyland",
                 image: "images/fantasyland.jpg",
-                ambientAudio: ["Audio/fantasyland_1.mp3", "Audio/Fantastyland 3.mp3"],
+                ambientAudio: ["audio/fantasy_bgm1.mp3"],
                 rides: {
                     peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },
-                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "Audio/SmallWorld.mp3" }
+                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
                 }
             },
             tomorrowland: {
@@ -196,59 +265,132 @@
             }
         };
 
-        const landSelect = document.getElementById('land-select');
-        const rideSelect = document.getElementById('ride-select');
+        // UI Elements
+        const landsGrid = document.getElementById('lands-grid');
+        const ridesSection = document.getElementById('rides-section');
+        const ridesGrid = document.getElementById('rides-grid');
         const itineraryList = document.getElementById('itinerary-list');
         const storyBox = document.getElementById('story-box');
         const displayImage = document.getElementById('display-image');
         const skipBtn = document.getElementById('skip-btn');
 
-        // Audio System Variables
-        const player1 = document.getElementById('player-1');
-        const player2 = document.getElementById('player-2');
-        let activePlayer = 1; // Tracks which player is currently audible
-        let fadeInterval; // Used to manage the timing of the volume fade
-
+        // State Variables to track what the user clicked
+        let currentSelectedLand = "";
+        let currentSelectedRide = "";
+        
         let itinerary = []; 
         let playbackQueue = []; 
 
-        function updateRides() {
-            const selectedLand = landSelect.value;
-            rideSelect.innerHTML = '<option value="">-- Choose a Ride (Optional) --</option>';
-            if (selectedLand && parkData[selectedLand]) {
-                const rides = parkData[selectedLand].rides;
-                for (const rideKey in rides) {
-                    const option = document.createElement('option');
-                    option.value = rideKey;
-                    option.text = rides[rideKey].name;
-                    rideSelect.appendChild(option);
-                }
+        // Audio Elements
+        const player1 = document.getElementById('player-1');
+        const player2 = document.getElementById('player-2');
+        let activePlayer = 1; 
+        let fadeInterval;
+
+        // --- NEW: RENDER THE LAND TILES ON PAGE LOAD ---
+        function renderLands() {
+            landsGrid.innerHTML = "";
+            for (const landKey in parkData) {
+                const land = parkData[landKey];
+                
+                // Create the tile HTML
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.id = `land-tile-${landKey}`;
+                tile.onclick = () => selectLand(landKey);
+                
+                // Include an onerror fallback just in case the image hasn't been uploaded yet
+                tile.innerHTML = `
+                    <img src="${land.image}" alt="${land.name}" onerror="this.style.display='none'">
+                    <p class="tile-label">${land.name}</p>
+                `;
+                
+                landsGrid.appendChild(tile);
             }
         }
 
-        function addToItinerary() {
-            const landKey = landSelect.value;
-            const rideKey = rideSelect.value;
+        // --- NEW: HANDLE CLICKING A LAND ---
+        function selectLand(landKey) {
+            currentSelectedLand = landKey;
+            currentSelectedRide = ""; // Reset ride choice when changing lands
 
-            if (!landKey) {
-                alert("Please select a land first!");
+            // Highlight the selected land tile
+            document.querySelectorAll('#lands-grid .tile').forEach(t => t.classList.remove('selected'));
+            document.getElementById(`land-tile-${landKey}`).classList.add('selected');
+
+            // Show and render the rides for this land
+            renderRides(landKey);
+        }
+
+        // --- NEW: RENDER THE RIDE TILES ---
+        function renderRides(landKey) {
+            ridesGrid.innerHTML = "";
+            ridesSection.style.display = "block"; // Unhide the rides section
+            
+            const rides = parkData[landKey].rides;
+            
+            for (const rideKey in rides) {
+                const ride = rides[rideKey];
+                
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.id = `ride-tile-${rideKey}`;
+                tile.onclick = () => selectRide(rideKey);
+                
+                tile.innerHTML = `
+                    <img src="${ride.image}" alt="${ride.name}" onerror="this.style.display='none'">
+                    <p class="tile-label">${ride.name}</p>
+                `;
+                
+                ridesGrid.appendChild(tile);
+            }
+        }
+
+        // --- NEW: HANDLE CLICKING A RIDE ---
+        function selectRide(rideKey) {
+            // Allow deselecting a ride if clicked twice
+            if (currentSelectedRide === rideKey) {
+                currentSelectedRide = "";
+                document.getElementById(`ride-tile-${rideKey}`).classList.remove('selected');
                 return;
             }
 
-            const landData = parkData[landKey];
+            currentSelectedRide = rideKey;
+
+            // Highlight the selected ride tile
+            document.querySelectorAll('#rides-grid .tile').forEach(t => t.classList.remove('selected'));
+            document.getElementById(`ride-tile-${rideKey}`).classList.add('selected');
+        }
+
+        // Initialize the page by drawing the land tiles
+        renderLands();
+
+        // --- UPDATED: ADD TO ITINERARY USING THE TILES ---
+        function addToItinerary() {
+            if (!currentSelectedLand) {
+                alert("Please tap a land first!");
+                return;
+            }
+
+            const landData = parkData[currentSelectedLand];
             let displayText = landData.name;
-            if (rideKey) displayText += " ➔ " + landData.rides[rideKey].name;
+            if (currentSelectedRide) {
+                displayText += " ➔ " + landData.rides[currentSelectedRide].name;
+            }
 
             const itemIndex = itinerary.length;
-            itinerary.push({ land: landKey, ride: rideKey, index: itemIndex });
+            itinerary.push({ land: currentSelectedLand, ride: currentSelectedRide, index: itemIndex });
 
             const li = document.createElement('li');
             li.textContent = displayText;
             li.id = "itinerary-item-" + itemIndex; 
             itineraryList.appendChild(li);
 
-            landSelect.value = "";
-            updateRides();
+            // Reset the visual selection
+            currentSelectedLand = "";
+            currentSelectedRide = "";
+            document.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
+            ridesSection.style.display = "none";
         }
 
         function clearItinerary() {
@@ -258,7 +400,6 @@
             storyBox.innerHTML = 'Build your itinerary above!';
             displayImage.style.display = 'none';
             
-            // Stop both players
             player1.pause();
             player2.pause();
             player1.src = '';
@@ -316,8 +457,8 @@
             playNextInQueue();
         }
 
+        // Audio System Logic (Unchanged)
         function playNextInQueue() {
-            // Remove previous UI highlights
             const allItems = document.querySelectorAll('#itinerary-list li');
             allItems.forEach(li => li.classList.remove('active-item'));
 
@@ -328,21 +469,17 @@
                 storyBox.innerHTML = "Your magical day has come to an end!";
                 displayImage.style.display = "none";
                 skipBtn.style.display = 'none';
-                
-                // Fade out the last song to complete silence
                 fadeOutSingle(currentPlayer);
                 return;
             }
 
             const currentStep = playbackQueue.shift(); 
 
-            // Highlight the new UI element
             if (currentStep.targetId) {
                 const activeListItem = document.getElementById(currentStep.targetId);
                 if (activeListItem) activeListItem.classList.add('active-item');
             }
 
-            // Update text and image
             storyBox.innerHTML = currentStep.text;
             if (currentStep.image) {
                 displayImage.src = currentStep.image;
@@ -351,50 +488,42 @@
                 displayImage.style.display = 'none';
             }
 
-            // --- THE CROSSFADE MAGIC ---
             nextPlayer.src = currentStep.audio;
-            nextPlayer.volume = 0; // Start at zero volume
+            nextPlayer.volume = 0; 
             
             nextPlayer.play().then(() => {
-                // If a song is currently playing, crossfade them. Otherwise, just fade the first one in.
                 if (!currentPlayer.paused && currentPlayer.src) {
                     crossfade(currentPlayer, nextPlayer);
                 } else {
                     fadeInSingle(nextPlayer);
                 }
-                // Switch the active player tag for the next round
                 activePlayer = activePlayer === 1 ? 2 : 1;
             }).catch(e => {
                 console.log("Audio not found: " + currentStep.audio);
             });
         }
 
-        // Fades one player OUT while fading the other IN over 2 seconds
         function crossfade(fadeOutPlayer, fadeInPlayer) {
             clearInterval(fadeInterval);
             let volume = 0;
-            
             fadeInterval = setInterval(() => {
-                volume += 0.05; // 5% volume change per tick
-                
+                volume += 0.05; 
                 if (volume >= 1) {
                     clearInterval(fadeInterval);
                     fadeInPlayer.volume = 1;
                     fadeOutPlayer.volume = 0;
-                    fadeOutPlayer.pause(); // Turn off the old player to save resources
+                    fadeOutPlayer.pause(); 
                 } else {
                     fadeInPlayer.volume = volume;
                     fadeOutPlayer.volume = 1 - volume;
                 }
-            }, 100); // Ticks every 100 milliseconds
+            }, 100); 
         }
 
-        // Fades a single player IN (used for the very first track)
         function fadeInSingle(player) {
             clearInterval(fadeInterval);
             let volume = 0;
             player.volume = 0;
-            
             fadeInterval = setInterval(() => {
                 volume += 0.05;
                 if (volume >= 1) {
@@ -406,11 +535,9 @@
             }, 100);
         }
 
-        // Fades a single player OUT (used for the very end of the walkthrough)
         function fadeOutSingle(player) {
             clearInterval(fadeInterval);
             let volume = player.volume;
-            
             fadeInterval = setInterval(() => {
                 volume -= 0.05;
                 if (volume <= 0) {
@@ -423,7 +550,6 @@
             }, 100);
         }
 
-        // When a track finishes naturally, trigger the next one
         player1.onended = function() { playNextInQueue(); };
         player2.onended = function() { playNextInQueue(); };
 
