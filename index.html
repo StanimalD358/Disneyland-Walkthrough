@@ -34,7 +34,7 @@
             display: flex;
             flex: 1;
             overflow: hidden;
-            padding-bottom: 90px; /* Space for the bottom player */
+            padding-bottom: 90px; 
         }
 
         .main-content {
@@ -63,7 +63,7 @@
             margin-top: 20px;
         }
 
-        /* --- TILE GRID (ALBUM COVERS) --- */
+        /* --- TILE GRID --- */
         .tile-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -203,7 +203,7 @@
             border-radius: 4px;
             object-fit: cover;
             margin-right: 15px;
-            display: none; /* Hidden until playing */
+            display: none; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
@@ -224,24 +224,58 @@
             color: var(--text-muted);
         }
 
-        .player-controls {
+        /* --- NEW: CENTER CONTROLS & SLIDER --- */
+        .player-center {
             flex: 1;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            max-width: 40%;
+            margin: 0 auto;
+        }
+
+        .player-controls {
+            margin-bottom: 8px;
         }
 
         .control-btn {
             background: transparent;
             color: var(--text-muted);
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             transition: color 0.2s, transform 0.2s;
         }
         .control-btn:hover { color: var(--text-main); transform: scale(1.1); }
         
-        #skip-btn { display: none; } /* Hidden until playing */
+        #skip-btn { display: none; } 
+
+        .progress-container {
+            display: none; /* Hidden until playing */
+            align-items: center;
+            width: 100%;
+        }
+
+        #time-current, #time-total {
+            font-size: 11px;
+            color: var(--text-muted);
+            min-width: 40px;
+        }
+        #time-current { text-align: right; }
+        #time-total { text-align: left; }
+
+        #progress-slider {
+            flex: 1;
+            margin: 0 10px;
+            cursor: pointer;
+            accent-color: var(--accent-gold); /* Colors the slider line */
+            height: 4px;
+        }
+
+        .player-right {
+            width: 30%;
+        }
 
         .hidden-player { display: none; }
     </style>
@@ -283,20 +317,31 @@
             </div>
         </div>
         
-        <div class="player-controls">
-            <button id="skip-btn" class="control-btn" onclick="skipStep()" title="Skip to Next">⏭️</button>
+        <div class="player-center">
+            <div class="player-controls">
+                <button id="skip-btn" class="control-btn" onclick="skipStep()" title="Skip to Next">⏭️</button>
+            </div>
+            
+            <div class="progress-container" id="progress-container">
+                <span id="time-current">0:00</span>
+                <input type="range" id="progress-slider" min="0" value="0" step="1">
+                <span id="time-total">0:00</span>
+            </div>
         </div>
+
+        <div class="player-right"></div>
     </div>
 
     <audio id="player-1" class="hidden-player"></audio>
     <audio id="player-2" class="hidden-player"></audio>
 
     <script>
+        // --- YOUR AUDIO DATA ---
         const parkData = {
             mainStreet: {
                 name: "Main Street, U.S.A.",
                 image: "images/main_street.jpg",
-                ambientAudio: ["Audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
+                ambientAudio: ["audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
                 rides: {
                     train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },
                     cinema: { name: "Main Street Cinema", image: "images/cinema.jpg", audio: "audio/cinema_bgm.mp3" }
@@ -304,40 +349,11 @@
             },
             adventureland: {
                 name: "Adventureland",
-                image: "images/Adventureland.png",
-                ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
-                rides: {
-                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", audio: "Audio/IndyRide.mp3" },
-                    jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", audio: "Audio/Jungle.mp3" },
-                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", audio: "Audio/TikiRoom.mp3" },
-                    Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", audio: "Audio/Tarzan.mp3" }
-                }
-            },
-            NewOrleansSquare: {
-                name: "New Orleans Square",
-                image: "images/New Orleans Square.png",
-                ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
-                rides: {
-                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", audio: "Audio/Pirates.mp3" },
-                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", audio: "Audio/Haunted.mp3" }
-                }
-            },
-            CritterCountry: {
-                name: "Critter Country",
-                image: "images/Splash Mountain.png",
-                ambientAudio: ["Audio/CC1.mp3","Audio/CC2.mp3","Audio/CC3.mp3", "Audio/CC4.mp3"],
-                rides: {
-                    Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", audio: "Audio/Splash.mp3" },
-                    WinnieThePooh: { name: "Winnie The Pooh", image: "images/The Many Adventures of Winnie the Pooh.png", audio: "Audio/Pooh.mp3" }
-                }
-            },
-            Frontierland: {
-                name: "Frontierland",
                 image: "images/adventureland.jpg",
                 ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
                 rides: {
-                    BigThunder: { name: "Big Thunder Mountain Railroad", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
-                    Twain: { name: "The Mark Twain Riverboat", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
+                    indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
+                    jungle: { name: "Jungle Cruise", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
                 }
             },
             fantasyland: {
@@ -346,26 +362,7 @@
                 ambientAudio: ["audio/fantasy_bgm1.mp3"],
                 rides: {
                     peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },
-                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Snowwhite: { name: "Snow White's Enchanted Wish", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Dumbo: { name: "Dumbo The Flying Elephant", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Toads: { name: "Mr. Toads Wild Ride", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Matterhorn: { name: "Matterhorn", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Story: { name: "Storybookland Canal Boats", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Carrousel: { name: "King Arthur Carrousel", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Pinnocchio: { name: "Pinocchio's Daring Journey", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Cups: { name: "Mad Tea Party", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Alice: { name: "Alice in Wonderland", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Casey: { name: "Casey Jr Circus Train", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
-                }
-            },
-            Toontown: {
-                name: "Toontown",
-                image: "images/adventureland.jpg",
-                ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
-                rides: {
-                    Railroad: { name: "Mickey and Minnie's Runaway Railway", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
-                    Rodger: { name: "Rodger Rabbits Cartoon Spin", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
+                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
                 }
             },
             tomorrowland: {
@@ -374,14 +371,10 @@
                 ambientAudio: ["audio/tomorrow_bgm1.mp3"],
                 rides: {
                     spaceMountain: { name: "Space Mountain", image: "images/space.jpg", audio: "audio/space_mountain.mp3" },
-                    starTours: { name: "Star Tours", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" },
-                    Buzz: { name: "Buzz Lightyear's Space Ranger Spin", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" },
-                    Carousel: { name: "Carousel of Progress", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" },
-                    Nemo: { name: "Finding Nemo Submarine Voyage", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" },
+                    starTours: { name: "Star Tours", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" }
                 }
             }
         };
-
 
         const landsGrid = document.getElementById('lands-grid');
         const ridesSection = document.getElementById('rides-section');
@@ -393,6 +386,10 @@
         const npSubtitle = document.getElementById('np-subtitle');
         const npImage = document.getElementById('np-image');
         const skipBtn = document.getElementById('skip-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressSlider = document.getElementById('progress-slider');
+        const timeCurrent = document.getElementById('time-current');
+        const timeTotal = document.getElementById('time-total');
 
         let currentSelectedLand = "";
         let currentSelectedRide = "";
@@ -469,7 +466,7 @@
             }
 
             if (itinerary.length === 0) {
-                itineraryList.innerHTML = ''; // Clear empty message
+                itineraryList.innerHTML = ''; 
             }
 
             const landData = parkData[currentSelectedLand];
@@ -480,7 +477,6 @@
             itinerary.push({ land: currentSelectedLand, ride: currentSelectedRide, index: itemIndex });
 
             const li = document.createElement('li');
-            // Format queue text
             li.innerHTML = `<strong>${titleText}</strong> &nbsp; <span style="font-size: 12px; color: #777;">(${subtitleText})</span>`;
             li.id = "itinerary-item-" + itemIndex; 
             itineraryList.appendChild(li);
@@ -507,6 +503,7 @@
             player2.src = '';
             
             skipBtn.style.display = 'none';
+            progressContainer.style.display = 'none';
         }
 
         function startWalkthrough() {
@@ -554,6 +551,7 @@
             });
 
             skipBtn.style.display = 'inline-block';
+            progressContainer.style.display = 'flex';
             playNextInQueue();
         }
 
@@ -571,6 +569,7 @@
                 npSubtitle.textContent = "Hope you had a magical day!";
                 npImage.style.display = "none";
                 skipBtn.style.display = 'none';
+                progressContainer.style.display = 'none';
                 fadeOutSingle(currentPlayer);
                 return;
             }
@@ -582,7 +581,6 @@
                 if (activeListItem) activeListItem.classList.add('active-item');
             }
 
-            // Update Player UI Bar
             npTitle.textContent = currentStep.title;
             npSubtitle.textContent = currentStep.subtitle;
             
@@ -596,6 +594,10 @@
             nextPlayer.src = currentStep.audio;
             nextPlayer.volume = 0; 
             
+            // Reset slider before playing new track
+            progressSlider.value = 0;
+            timeCurrent.textContent = "0:00";
+            
             nextPlayer.play().then(() => {
                 if (!currentPlayer.paused && currentPlayer.src) {
                     crossfade(currentPlayer, nextPlayer);
@@ -608,6 +610,43 @@
             });
         }
 
+        // --- NEW: SLIDER AND TIME TRACKING LOGIC ---
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return m + ":" + (s < 10 ? "0" + s : s);
+        }
+
+        function updateSliderProgress(e) {
+            // Only update the slider if the event is coming from the currently active player
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            if (e.target !== currentPlayer) return;
+
+            const current = currentPlayer.currentTime;
+            const duration = currentPlayer.duration;
+            
+            timeCurrent.textContent = formatTime(current);
+            if (duration) {
+                timeTotal.textContent = formatTime(duration);
+                progressSlider.max = duration;
+                progressSlider.value = current;
+            }
+        }
+
+        // Attach listeners to both players to update time
+        player1.addEventListener('timeupdate', updateSliderProgress);
+        player2.addEventListener('timeupdate', updateSliderProgress);
+
+        // When the user drags the slider, seek to that point in the audio
+        progressSlider.addEventListener('input', (e) => {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            const seekTime = e.target.value;
+            currentPlayer.currentTime = seekTime;
+            timeCurrent.textContent = formatTime(seekTime);
+        });
+
+        // --- CROSSFADING LOGIC ---
         function crossfade(fadeOutPlayer, fadeInPlayer) {
             clearInterval(fadeInterval);
             let volume = 0;
