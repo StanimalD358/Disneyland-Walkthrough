@@ -269,65 +269,43 @@
         #time-current { text-align: right; }
         #time-total { text-align: left; }
 
-        /* --- CUSTOM DYNAMIC SLIDER STYLING (NEW PICTURE THUMB) --- */
-        #progress-slider {
-            flex: 1;
-            margin: 0 10px;
-            cursor: pointer;
-            -webkit-appearance: none; 
-            background: transparent; 
-            height: 4px;
-            /* Default icon if JS fails, user must ensure images exist */
-            --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
-        }
-
-        /* Slider Track */
-        #progress-slider::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            background: #444;
-            border-radius: 2px;
-        }
-        #progress-slider::-moz-range-track {
-            width: 100%;
-            height: 4px;
-            background: #444;
-            border-radius: 2px;
-        }
-
-        /* Slider Thumb (The "Dot" - Updated to be a Picture) */
+       /* Slider Thumb (The "Dot" - Completely replaced by the Picture) */
         #progress-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 20px; /* Slightly larger to fit pictures */
-            width: 20px;
-            border-radius: 50%;
+            height: 28px; 
+            width: 28px;
+            border-radius: 0; 
+            border: none; /* Nukes the hidden webkit border */
+            outline: none;
             
-            /* --- NEW PICTURE LOGIC --- */
             background-image: var(--thumb-icon);
-            background-size: contain; /* ensures image fits within the 20x20 circle */
+            background-size: contain; 
             background-repeat: no-repeat;
             background-position: center;
-            background-color: transparent; /* Makes the backing of the thumb clear */
-            /* ------------------------- */
+            background-color: transparent; 
             
-            margin-top: -8px; /* Adjusted centering for new size */
+            margin-top: -12px; 
             
-            /* Standard golden magical glow (kept from color dot version) */
-            box-shadow: 0 0 10px rgba(255, 193, 7, 0.7); 
-            transition: background-image 0.3s, box-shadow 0.3s;
+            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.8));
+            box-shadow: none; 
+            transition: background-image 0.3s;
         }
         #progress-slider::-moz-range-thumb {
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
+            height: 28px;
+            width: 28px;
+            border-radius: 0;
+            border: none; /* Nukes the hidden mozilla border */
+            outline: none;
+            
             background-image: var(--thumb-icon);
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             background-color: transparent;
-            border: none;
-            box-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
-            transition: background-image 0.3s, box-shadow 0.3s;
+            
+            filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.8));
+            box-shadow: none;
+            transition: background-image 0.3s;
         }
 
         .player-right {
@@ -489,7 +467,7 @@
                 name: "Tomorrowland",
                 image: "images/Tomorrowland.png",
                 icon: "images/Space Dot.png", 
-                ambientAudio: ["Audio/TL1.mp3"],
+                ambientAudio: ["Audio/TL1.mp3","Audio/TL2.mp3"],
                 rides: {
                     spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", audio: "audio/space_mountain.mp3" },
                     starTours: { name: "Star Tours", image: "images/Star Tours.png", audio: "audio/star_tours.mp3" },
