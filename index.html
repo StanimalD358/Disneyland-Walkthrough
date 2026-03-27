@@ -45,7 +45,7 @@
 
         .sidebar {
             flex: 1;
-            min-width: 320px; /* Made slightly wider to comfortably fit images */
+            min-width: 320px; 
             background-color: #000000;
             padding: 20px;
             overflow-y: auto;
@@ -151,7 +151,7 @@
         }
         .clear-btn:hover { color: #ff4d4d; border-color: #ff4d4d; }
 
-        /* --- QUEUE LIST (UPDATED FOR SPOTIFY-STYLE IMAGES) --- */
+        /* --- QUEUE LIST --- */
         #itinerary-list {
             padding: 0;
             margin: 0;
@@ -170,7 +170,6 @@
             background-color: var(--bg-hover); 
         }
         
-        /* The mini album artwork */
         .queue-img {
             width: 44px;
             height: 44px;
@@ -184,6 +183,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            flex: 1; /* Allows text to take up remaining space */
         }
 
         .queue-title {
@@ -204,7 +204,25 @@
             text-overflow: ellipsis;
         }
 
-        /* Active styling overrides */
+        /* NEW: Individual Remove Button */
+        .remove-item-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px 10px;
+            opacity: 0.3;
+            transition: opacity 0.2s, color 0.2s, transform 0.2s;
+        }
+        #itinerary-list li:hover .remove-item-btn {
+            opacity: 1; /* Shows up clearly when hovering over the track */
+        }
+        .remove-item-btn:hover {
+            color: #ff4d4d;
+            transform: scale(1.2);
+        }
+
         .active-item {
             background-color: rgba(255, 193, 7, 0.1) !important;
             border-left: 3px solid var(--accent-gold);
@@ -367,70 +385,39 @@
             --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
         }
 
-        #progress-slider::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px; 
-            background: #444;
-            border-radius: 4px;
-        }
-        #progress-slider::-moz-range-track {
-            width: 100%;
-            height: 8px;
-            background: #444;
-            border-radius: 4px;
-        }
+        #progress-slider::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
+        #progress-slider::-moz-range-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
 
         #progress-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 48px; 
-            width: 48px;
-            border-radius: 0; 
-            border: none; 
-            outline: none;
-            
+            height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
             background-image: var(--thumb-icon);
-            background-size: contain; 
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: transparent; 
-            
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; 
             margin-top: -20px; 
-            
             filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8));
-            box-shadow: none; 
             transition: background-image 0.3s;
         }
         #progress-slider::-moz-range-thumb {
-            height: 48px;
-            width: 48px;
-            border-radius: 0;
-            border: none;
-            outline: none;
-            
+            height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
             background-image: var(--thumb-icon);
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: transparent;
-            
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent;
             filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8));
-            box-shadow: none;
             transition: background-image 0.3s;
         }
 
-        /* --- NEW: PIXIE DUST VOLUME SLIDER --- */
+        /* --- PIXIE DUST VOLUME SLIDER --- */
         .player-right {
             width: 30%;
             display: flex;
-            justify-content: flex-end; /* Aligns to the far right */
+            justify-content: flex-end; 
             align-items: center;
         }
 
         .volume-container {
-            display: none; /* Hidden until playing */
+            display: none; 
             align-items: center;
             gap: 12px;
-            width: 160px; /* Size of the volume bar */
+            width: 160px; 
         }
 
         #vol-icon {
@@ -449,27 +436,18 @@
         #volume-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
         #volume-slider::-moz-range-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
 
-        /* The Magical Star Thumb */
         #volume-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background-color: transparent;
+            height: 24px; width: 24px; border-radius: 50%; background-color: transparent;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            margin-top: -10px;
-            /* Glowing drop shadow */
+            background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -10px; 
             filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1);
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
         }
         #volume-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.3) rotate(15deg); /* Spin and pop effect */
+            transform: scale(1.3) rotate(15deg); 
             filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff);
         }
-
         #volume-slider::-moz-range-thumb {
             height: 24px; width: 24px; border-radius: 50%; border: none; background-color: transparent;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
@@ -508,7 +486,7 @@
             <ul id="itinerary-list">
                 <li style="color: #555; padding: 10px 0;">Your queue is empty.</li>
             </ul>
-            <button class="clear-btn" onclick="clearItinerary()">Clear Queue</button>
+            <button class="clear-btn" onclick="clearItinerary()">Clear Entire Queue</button>
             <button class="start-btn" onclick="startWalkthrough()">▶ Play Walkthrough</button>
         </div>
     </div>
@@ -668,12 +646,14 @@
         // Volume UI Elements
         const volumeContainer = document.getElementById('volume-container');
         const volumeSlider = document.getElementById('volume-slider');
-        let masterVolume = 1.0; // Global Volume Tracker
+        let masterVolume = 1.0; 
 
+        // State Variables
         let currentSelectedLand = "";
         let currentSelectedRide = "";
         let itinerary = []; 
         let playbackQueue = []; 
+        let nextItemId = 0; // NEW: Generates a truly unique ID for every item added to the queue
 
         const player1 = document.getElementById('player-1');
         const player2 = document.getElementById('player-2');
@@ -738,6 +718,7 @@
 
         renderLands();
 
+        // --- QUEUE MANAGEMENT LOGIC ---
         function addToItinerary() {
             if (!currentSelectedLand) {
                 alert("Please select a land first!");
@@ -753,11 +734,11 @@
             let subtitleText = currentSelectedRide ? landData.name : "Atmosphere";
             let imageSrc = currentSelectedRide ? landData.rides[currentSelectedRide].image : landData.image;
 
-            const itemIndex = itinerary.length;
-            itinerary.push({ land: currentSelectedLand, ride: currentSelectedRide, index: itemIndex });
+            const itemId = nextItemId++; // Generate a unique ID for this specific entry
+            itinerary.push({ land: currentSelectedLand, ride: currentSelectedRide, id: itemId });
 
             const li = document.createElement('li');
-            li.id = "itinerary-item-" + itemIndex; 
+            li.id = "itinerary-item-" + itemId; 
             
             li.innerHTML = `
                 <img src="${imageSrc}" class="queue-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'44\\' height=\\'44\\'><rect width=\\'44\\' height=\\'44\\' fill=\\'%23333\\'/></svg>'">
@@ -765,6 +746,7 @@
                     <span class="queue-title">${titleText}</span>
                     <span class="queue-subtitle">${subtitleText}</span>
                 </div>
+                <button class="remove-item-btn" onclick="removeFromItinerary(${itemId})" title="Remove from queue">✕</button>
             `;
             
             itineraryList.appendChild(li);
@@ -775,9 +757,28 @@
             ridesSection.style.display = "none";
         }
 
+        // NEW: Function to remove a single item from the queue
+        function removeFromItinerary(id) {
+            // 1. Remove from the visual layout
+            const li = document.getElementById("itinerary-item-" + id);
+            if (li) li.remove();
+
+            // 2. Remove from the master array
+            itinerary = itinerary.filter(item => item.id !== id);
+
+            // 3. Remove from the upcoming playback queue (so it skips it dynamically!)
+            playbackQueue = playbackQueue.filter(step => step.targetId !== "itinerary-item-" + id);
+
+            // 4. Restore the empty state message if they delete the very last item
+            if (itinerary.length === 0) {
+                itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
+            }
+        }
+
         function clearItinerary() {
             itinerary = [];
             playbackQueue = [];
+            nextItemId = 0; // Reset the ID counter
             itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
             
             npTitle.textContent = 'Ready to Play';
@@ -814,7 +815,7 @@
                     landIcon: landData.icon, 
                     title: `Walking through ${landData.name}`,
                     subtitle: "Atmosphere",
-                    targetId: "itinerary-item-" + item.index
+                    targetId: "itinerary-item-" + item.id // Updated to use unique ID
                 });
 
                 if (item.ride) {
@@ -825,7 +826,7 @@
                         landIcon: landData.icon, 
                         title: rideData.name,
                         subtitle: landData.name,
-                        targetId: "itinerary-item-" + item.index
+                        targetId: "itinerary-item-" + item.id // Updated to use unique ID
                     });
                 }
             });
@@ -840,7 +841,7 @@
                 landIcon: lastLandData.icon, 
                 title: `Exiting into ${lastLandData.name}`,
                 subtitle: "Atmosphere",
-                targetId: "itinerary-item-" + lastItem.index
+                targetId: "itinerary-item-" + lastItem.id // Updated to use unique ID
             });
 
             skipBtn.style.display = 'flex';
@@ -937,7 +938,6 @@
         volumeSlider.addEventListener('input', (e) => {
             masterVolume = e.target.value / 100;
             const currentPlayer = activePlayer === 1 ? player1 : player2;
-            // Instantly apply volume if we aren't currently fading
             if (!currentPlayer.paused) {
                 currentPlayer.volume = masterVolume;
             }
@@ -976,7 +976,7 @@
             timeCurrent.textContent = formatTime(seekTime);
         });
 
-        // --- UPDATED DYNAMIC FADING LOGIC (RESPECTS MASTER VOLUME) ---
+        // --- DYNAMIC FADING LOGIC ---
         function crossfade(fadeOutPlayer, fadeInPlayer) {
             clearInterval(fadeInterval);
             let progress = 0;
