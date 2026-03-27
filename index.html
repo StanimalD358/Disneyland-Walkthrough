@@ -231,7 +231,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            max-width: 40%;
+            max-width: 50%; /* Increased from 40% to let the bar stretch out horizontally */
             margin: 0 auto;
         }
 
@@ -269,13 +269,39 @@
         #time-current { text-align: right; }
         #time-total { text-align: left; }
 
-       /* Slider Thumb (The "Dot" - Completely replaced by the Picture) */
+        /* --- CUSTOM DYNAMIC SLIDER STYLING (PICTURE THUMB) --- */
+        #progress-slider {
+            flex: 1;
+            margin: 0 15px; /* Gives a little more breathing room on the sides */
+            cursor: pointer;
+            -webkit-appearance: none; 
+            background: transparent; 
+            height: 28px; /* MATCHES the height of the icon so it doesn't get clipped or squished */
+            /* Default fallback icon */
+            --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
+        }
+
+        /* Slider Track */
+        #progress-slider::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px; /* Made the track slightly thicker to balance the larger icon */
+            background: #444;
+            border-radius: 3px;
+        }
+        #progress-slider::-moz-range-track {
+            width: 100%;
+            height: 6px;
+            background: #444;
+            border-radius: 3px;
+        }
+
+        /* Slider Thumb (The "Dot" - Completely replaced by the Picture) */
         #progress-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 28px; 
             width: 28px;
             border-radius: 0; 
-            border: none; /* Nukes the hidden webkit border */
+            border: none; 
             outline: none;
             
             background-image: var(--thumb-icon);
@@ -284,7 +310,7 @@
             background-position: center;
             background-color: transparent; 
             
-            margin-top: -12px; 
+            margin-top: -11px; /* Perfectly centers the 28px icon vertically on the 6px track */
             
             filter: drop-shadow(0px 2px 5px rgba(0,0,0,0.8));
             box-shadow: none; 
@@ -294,7 +320,7 @@
             height: 28px;
             width: 28px;
             border-radius: 0;
-            border: none; /* Nukes the hidden mozilla border */
+            border: none;
             outline: none;
             
             background-image: var(--thumb-icon);
