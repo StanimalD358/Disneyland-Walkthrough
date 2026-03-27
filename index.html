@@ -141,24 +141,39 @@
         .zoom-btn:hover { background-color: var(--accent-blue); }
         .zoom-btn:active { transform: scale(0.9); }
 
+        /* --- UPDATED: PICTURE PINS & MAGIC PULSE --- */
         .map-pin {
             position: absolute;
             transform: translate(-50%, -50%); 
             cursor: pointer;
             box-shadow: 0 3px 8px rgba(0,0,0,0.8);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s;
             z-index: 10;
         }
 
         .ride-pin {
-            width: 18px; height: 18px; background-color: var(--accent-blue);
-            border: 2px solid white; border-radius: 50%; 
+            width: 36px; /* Bigger to show pictures clearly */
+            height: 36px; 
+            background-color: var(--bg-card); /* Fallback color */
+            border: 2px solid white; 
+            border-radius: 50%; 
+            /* The continuous glowing pulse animation */
+            animation: magicPulse 2.5s infinite;
         }
 
+        /* Stops the pulse and zooms in when you hover over the picture */
         .map-pin:hover {
-            transform: translate(-50%, -50%) scale(1.5);
-            background-color: var(--accent-gold);
+            transform: translate(-50%, -50%) scale(1.3);
+            border-color: var(--accent-gold);
             z-index: 20; 
+            animation: none; 
+        }
+
+        /* The Pulse Keyframes */
+        @keyframes magicPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
 
         .map-pin::after {
@@ -244,7 +259,6 @@
             .main-content { padding: 15px; overflow: visible; flex: none; }
             .sidebar { min-width: 100%; border-left: none; border-top: 1px solid #282828; padding: 15px; overflow: visible; flex: none; }
             .map-outer-container { height: 60vh; min-height: 400px; flex: none; }
-            
             .player-bar { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; grid-template-areas: "info controls" "progress progress"; height: auto; padding: 15px; gap: 10px 15px; }
             .now-playing-info { grid-area: info; width: 100%; min-width: 0; }
             #np-image { width: 50px; height: 50px; margin-right: 12px; }
@@ -417,7 +431,6 @@
         const mapPinsContainer = document.getElementById('map-pins-container');
         const itineraryList = document.getElementById('itinerary-list');
         
-        // Player Elements
         const npTitle = document.getElementById('np-title');
         const npSubtitle = document.getElementById('np-subtitle');
         const npImage = document.getElementById('np-image');
@@ -431,7 +444,6 @@
         const volumeSlider = document.getElementById('volume-slider');
         let masterVolume = 1.0; 
 
-        // State Variables
         let itinerary = []; 
         let playbackQueue = []; 
         let nextItemId = 0; 
@@ -442,7 +454,7 @@
         let activePlayer = 1; 
         let fadeInterval;
 
-        // --- MAP RENDERING ---
+        // --- MAP RENDERING (NOW WITH PICTURE PINS) ---
         function renderMapPins() {
             mapPinsContainer.innerHTML = '';
             
@@ -456,6 +468,12 @@
                         ridePin.className = 'map-pin ride-pin';
                         ridePin.style.left = ride.mapX + '%';
                         ridePin.style.top = ride.mapY + '%';
+                        
+                        // ✨ MAGIC ✨ Paints the ride picture directly onto the map pin
+                        ridePin.style.backgroundImage = `url('${ride.image}')`;
+                        ridePin.style.backgroundSize = 'cover';
+                        ridePin.style.backgroundPosition = 'center';
+                        
                         ridePin.setAttribute('data-name', ride.name);
                         ridePin.onclick = () => addToItinerary(landKey, rideKey);
                         mapPinsContainer.appendChild(ridePin);
@@ -676,7 +694,6 @@
         // --- 📍 TEMPORARY MAP PIN FINDER 📍 ---
         // Delete this block after you place all your pins!
         zoomContainer.addEventListener('click', function(event) {
-            // Ignore the click if we actually clicked a pin
             if(event.target.classList.contains('map-pin')) return; 
 
             const rect = zoomContainer.getBoundingClientRect();
