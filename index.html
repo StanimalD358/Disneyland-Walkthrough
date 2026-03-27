@@ -34,7 +34,7 @@
             display: flex;
             flex: 1;
             overflow: hidden;
-            padding-bottom: 120px; /* Increased so content doesn't hide behind the taller bar */
+            padding-bottom: 120px; /* Space for the taller bar */
         }
 
         .main-content {
@@ -176,13 +176,12 @@
         }
 
         /* --- BOTTOM "NOW PLAYING" BAR --- */
-        /* --- BOTTOM "NOW PLAYING" BAR --- */
         .player-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 120px; /* Taller bar */
+            height: 120px;
             background-color: var(--player-bg);
             border-top: 1px solid #282828;
             display: flex;
@@ -199,7 +198,7 @@
         }
 
         #np-image {
-            width: 80px; /* Bigger album art */
+            width: 80px; 
             height: 80px; 
             border-radius: 6px;
             object-fit: cover;
@@ -214,18 +213,18 @@
         }
 
         #np-title {
-            font-size: 18px; /* Bigger title */
+            font-size: 18px; 
             font-weight: bold;
             color: var(--text-main);
             margin-bottom: 4px;
         }
 
         #np-subtitle {
-            font-size: 14px; /* Bigger subtitle */
+            font-size: 14px; 
             color: var(--text-muted);
         }
 
-        /* --- CENTER CONTROLS & DYNAMIC SLIDER --- */
+        /* --- CENTER CONTROLS & NEW PREMIUM BUTTONS --- */
         .player-center {
             flex: 1;
             display: flex;
@@ -240,22 +239,75 @@
             margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 25px;
         }
 
         .control-btn {
             background: transparent;
-            color: var(--text-muted);
+            color: var(--text-main);
             border: none;
-            font-size: 28px; /* Bigger skip button */
             cursor: pointer;
-            transition: color 0.2s, transform 0.2s;
             display: none; 
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy hover animation */
         }
-        .control-btn:hover { color: var(--text-main); transform: scale(1.1); }
         
-        #play-pause-btn { font-size: 40px; color: var(--text-main); } /* Massive play button */
+        /* 🏰 The Magical Royal Blue Play/Pause Button */
+        #play-pause-btn { 
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003399, #005ce6); 
+            border: 3px solid #ffcc00; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 204, 0, 0.3), inset 0 2px 5px rgba(255,255,255,0.4);
+        }
+        #play-pause-btn:hover { 
+            transform: scale(1.1); 
+            background: linear-gradient(135deg, #0040cc, #0073e6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 204, 0, 0.6), inset 0 2px 5px rgba(255,255,255,0.5);
+            border-color: #ffe680;
+        }
 
+        /* ⏭️ The Clean Dark Skip Button */
+        #skip-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a2a2a, #444);
+            border: 2px solid #a7a7a7;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        #skip-btn:hover {
+            transform: scale(1.1);
+            border-color: #ffffff;
+            background: linear-gradient(135deg, #333, #555);
+        }
+
+        /* Clean SVG Icon styling */
+        .control-btn svg {
+            fill: currentColor;
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+        }
+        #skip-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* CSS Logic to swap the Play and Pause pictures */
+        .icon-play, .icon-pause { display: none; }
+        
+        #play-pause-btn.is-paused .icon-play { 
+            display: block; 
+            margin-left: 5px; /* Optically centers the triangle perfectly */
+        }
+        #play-pause-btn.is-playing .icon-pause { 
+            display: block; 
+        }
+
+        /* --- MASSIVE PICTURE SCRUBBER (From Last Update) --- */
         .progress-container {
             display: none; 
             align-items: center;
@@ -263,28 +315,26 @@
         }
 
         #time-current, #time-total {
-            font-size: 14px; /* Bigger time text */
+            font-size: 14px; 
             color: var(--text-muted);
             min-width: 50px;
         }
         #time-current { text-align: right; }
         #time-total { text-align: left; }
 
-        /* --- CUSTOM DYNAMIC SLIDER STYLING (PICTURE THUMB) --- */
         #progress-slider {
             flex: 1;
             margin: 0 20px; 
             cursor: pointer;
             -webkit-appearance: none; 
             background: transparent; 
-            height: 48px; /* Massive invisible hit-box for the giant icon */
+            height: 48px; 
             --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
         }
 
-        /* Slider Track */
         #progress-slider::-webkit-slider-runnable-track {
             width: 100%;
-            height: 8px; /* Thicker track */
+            height: 8px; 
             background: #444;
             border-radius: 4px;
         }
@@ -295,10 +345,9 @@
             border-radius: 4px;
         }
 
-        /* Slider Thumb (The "Dot" - Completely replaced by the Picture) */
         #progress-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 48px; /* HUGE 48px icon */
+            height: 48px; 
             width: 48px;
             border-radius: 0; 
             border: none; 
@@ -310,7 +359,7 @@
             background-position: center;
             background-color: transparent; 
             
-            margin-top: -20px; /* Math to center 48px icon on an 8px track */
+            margin-top: -20px; 
             
             filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8));
             box-shadow: none; 
@@ -332,10 +381,6 @@
             filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8));
             box-shadow: none;
             transition: background-image 0.3s;
-        }
-
-        .player-right {
-            width: 30%;
         }
 
         .player-right {
@@ -384,8 +429,13 @@
         
         <div class="player-center">
             <div class="player-controls">
-                <button id="play-pause-btn" class="control-btn" onclick="togglePlayPause()" title="Pause">⏸️</button>
-                <button id="skip-btn" class="control-btn" onclick="skipStep()" title="Skip to Next">⏭️</button>
+                <button id="play-pause-btn" class="control-btn is-playing" onclick="togglePlayPause()" title="Pause">
+                    <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button id="skip-btn" class="control-btn" onclick="skipStep()" title="Skip to Next">
+                    <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+                </button>
             </div>
             
             <div class="progress-container" id="progress-container">
@@ -402,14 +452,13 @@
     <audio id="player-2" class="hidden-player"></audio>
 
     <script>
-        // --- YOUR AUDIO DATA (UPDATED WITH ICON PICTURE PATHS) ---
+        // --- YOUR AUDIO DATA WITH ICON PATHS ---
         const parkData = {
             mainStreet: {
                 name: "Main Street, U.S.A.",
                 image: "images/main_street.jpg",
-                 // 👉 UPDATE THESE ICON PATHS with your actual file names
                 icon: "images/icon_train.png", 
-                ambientAudio: ["Audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
+                ambientAudio: ["audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
                 rides: {
                     train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },
                     cinema: { name: "Main Street Cinema", image: "images/cinema.jpg", audio: "audio/cinema_bgm.mp3" }
@@ -417,93 +466,32 @@
             },
             adventureland: {
                 name: "Adventureland",
-                image: "images/Adventureland.png",
-                  // 👉 UPDATE THESE ICON PATHS with your actual file names
-                icon: "images/icon_train.png", 
-                ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
-                rides: {
-                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", audio: "Audio/IndyRide.mp3" },
-                    jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", audio: "Audio/Jungle.mp3" },
-                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", audio: "Audio/TikiRoom.mp3" },
-                    Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", audio: "Audio/Tarzan.mp3" }
-                }
-            },
-            NewOrleansSquare: {
-                name: "New Orleans Square",
-                image: "images/New Orleans Square.png",
-                  // 👉 UPDATE THESE ICON PATHS with your actual file names
-                icon: "images/icon_train.png", 
-                ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
-                rides: {
-                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", audio: "Audio/Pirates.mp3" },
-                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", audio: "Audio/Haunted.mp3" }
-                }
-            },
-            CritterCountry: {
-                name: "Critter Country",
-                image: "images/Splash Mountain.png",
-                  // 👉 UPDATE THESE ICON PATHS with your actual file names
-                icon: "images/icon_train.png", 
-                ambientAudio: ["Audio/CC1.mp3","Audio/CC2.mp3","Audio/CC3.mp3", "Audio/CC4.mp3"],
-                rides: {
-                    Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", audio: "Audio/Splash.mp3" },
-                    WinnieThePooh: { name: "Winnie The Pooh", image: "images/The Many Adventures of Winnie the Pooh.png", audio: "Audio/Pooh.mp3" }
-                }
-            },
-            Frontierland: {
-                name: "Frontierland",
                 image: "images/adventureland.jpg",
-                  // 👉 UPDATE THESE ICON PATHS with your actual file names
-                icon: "images/icon_train.png", 
+                icon: "images/icon_compass.png",
                 ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
                 rides: {
-                    BigThunder: { name: "Big Thunder Mountain Railroad", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
-                    Twain: { name: "The Mark Twain Riverboat", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
+                    indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
+                    jungle: { name: "Jungle Cruise", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
                 }
             },
             fantasyland: {
                 name: "Fantasyland",
                 image: "images/fantasyland.jpg",
-                  // 👉 UPDATE THESE ICON PATHS with your actual file names
-                icon: "images/icon_train.png", 
+                icon: "images/icon_castle.png",
                 ambientAudio: ["audio/fantasy_bgm1.mp3"],
                 rides: {
                     peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },
-                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Snowwhite: { name: "Snow White's Enchanted Wish", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Dumbo: { name: "Dumbo The Flying Elephant", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Toads: { name: "Mr. Toads Wild Ride", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Matterhorn: { name: "Matterhorn", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Story: { name: "Storybookland Canal Boats", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Carrousel: { name: "King Arthur Carrousel", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Pinnocchio: { name: "Pinocchio's Daring Journey", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Cups: { name: "Mad Tea Party", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Alice: { name: "Alice in Wonderland", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
-                    Casey: { name: "Casey Jr Circus Train", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
-                }
-            },
-            Toontown: {
-                name: "Toontown",
-                image: "images/adventureland.jpg",
-                  // 👉 UPDATE THESE ICON PATHS with your actual file names
-                icon: "images/icon_train.png", 
-                ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
-                rides: {
-                    Railroad: { name: "Mickey and Minnie's Runaway Railway", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
-                    Rodger: { name: "Rodger Rabbits Cartoon Spin", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
+                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
                 }
             },
             tomorrowland: {
                 name: "Tomorrowland",
-                image: "images/Tomorrowland.png",
-                icon: "images/Space Icon.png", 
-                ambientAudio: ["Audio/TL1.mp3","Audio/TL2.mp3"],
+                image: "images/tomorrowland.jpg",
+                icon: "images/icon_rocket.png",
+                ambientAudio: ["audio/tomorrow_bgm1.mp3"],
                 rides: {
-                    spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", audio: "audio/space_mountain.mp3" },
-                    starTours: { name: "Star Tours", image: "images/Star Tours.png", audio: "audio/star_tours.mp3" },
-                    Buzz: { name: "Buzz Lightyear's Space Ranger Spin", image: "images/Buzz.png", audio: "Audio/Buzz.mp3" },
-                    Carousel: { name: "Carousel of Progress", image: "images/Carousel of Progress.png", audio: "audio/star_tours.mp3" },
-                    Nemo: { name: "Finding Nemo Submarine Voyage", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" },
+                    spaceMountain: { name: "Space Mountain", image: "images/space.jpg", audio: "audio/space_mountain.mp3" },
+                    starTours: { name: "Star Tours", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" }
                 }
             }
         };
@@ -655,7 +643,7 @@
                 playbackQueue.push({
                     audio: randomAmbient,
                     image: landData.image,
-                    landIcon: landData.icon, // Pass the new picture icon path along
+                    landIcon: landData.icon, 
                     title: `Walking through ${landData.name}`,
                     subtitle: "Atmosphere",
                     targetId: "itinerary-item-" + item.index
@@ -666,7 +654,7 @@
                     playbackQueue.push({
                         audio: rideData.audio,
                         image: rideData.image,
-                        landIcon: landData.icon, // Also use land icon while on the ride
+                        landIcon: landData.icon, 
                         title: rideData.name,
                         subtitle: landData.name,
                         targetId: "itinerary-item-" + item.index
@@ -681,30 +669,33 @@
             playbackQueue.push({
                 audio: finalAmbient,
                 image: lastLandData.image,
-                landIcon: lastLandData.icon, // Use the final land's icon
+                landIcon: lastLandData.icon, 
                 title: `Exiting into ${lastLandData.name}`,
                 subtitle: "Atmosphere",
                 targetId: "itinerary-item-" + lastItem.index
             });
 
-            skipBtn.style.display = 'inline-block';
-            playPauseBtn.style.display = 'inline-block'; 
-            playPauseBtn.textContent = '⏸️'; 
+            skipBtn.style.display = 'flex';
+            playPauseBtn.style.display = 'flex'; 
+            playPauseBtn.classList.remove('is-paused');
+            playPauseBtn.classList.add('is-playing');
             progressContainer.style.display = 'flex';
             playNextInQueue();
         }
 
-        // --- PLAY/PAUSE LOGIC ---
+        // --- UPDATED PLAY/PAUSE LOGIC ---
         function togglePlayPause() {
             const currentPlayer = activePlayer === 1 ? player1 : player2;
             
             if (currentPlayer.paused) {
                 currentPlayer.play();
-                playPauseBtn.textContent = '⏸️';
+                playPauseBtn.classList.remove('is-paused');
+                playPauseBtn.classList.add('is-playing');
                 playPauseBtn.title = 'Pause';
             } else {
                 currentPlayer.pause();
-                playPauseBtn.textContent = '▶️';
+                playPauseBtn.classList.remove('is-playing');
+                playPauseBtn.classList.add('is-paused');
                 playPauseBtn.title = 'Play';
             }
         }
@@ -746,24 +737,20 @@
                 npImage.style.display = 'none';
             }
 
-            // --- THE PICTURE SCRUB BAR MAGIC ---
             if (currentStep.landIcon) {
-                // 👉 This injects the new land picture path into the CSS variable
                 progressSlider.style.setProperty('--thumb-icon', `url('${currentStep.landIcon}')`);
             } else {
-                // Fallback icon if data is missing (should not happen with default data)
                 progressSlider.style.setProperty('--thumb-icon', `url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>')`);
             }
-            // ------------------------------------
 
             nextPlayer.src = currentStep.audio;
             nextPlayer.volume = 0; 
             
-            // Reset slider before playing new track
             progressSlider.value = 0;
             timeCurrent.textContent = "0:00";
             
-            playPauseBtn.textContent = '⏸️';
+            playPauseBtn.classList.remove('is-paused');
+            playPauseBtn.classList.add('is-playing');
             
             nextPlayer.play().then(() => {
                 if (!currentPlayer.paused && currentPlayer.src) {
