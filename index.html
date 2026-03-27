@@ -491,8 +491,9 @@
             mainStreet: {
                 name: "Main Street, U.S.A.",
                 image: "images/main_street.jpg",
+                 // 👉 UPDATE THESE ICON PATHS with your actual file names
                 icon: "images/icon_train.png", 
-                ambientAudio: ["audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
+                ambientAudio: ["Audio/main_street_bgm1.mp3", "audio/main_street_bgm2.mp3"],
                 rides: {
                     train: { name: "Disneyland Railroad", image: "images/train.jpg", audio: "audio/train_ride.mp3" },
                     cinema: { name: "Main Street Cinema", image: "images/cinema.jpg", audio: "audio/cinema_bgm.mp3" }
@@ -500,36 +501,96 @@
             },
             adventureland: {
                 name: "Adventureland",
+                image: "images/Adventureland.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
+                ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
+                rides: {
+                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", audio: "Audio/IndyRide.mp3" },
+                    jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", audio: "Audio/Jungle.mp3" },
+                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", audio: "Audio/TikiRoom.mp3" },
+                    Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", audio: "Audio/Tarzan.mp3" }
+                }
+            },
+            NewOrleansSquare: {
+                name: "New Orleans Square",
+                image: "images/New Orleans Square.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
+                ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
+                rides: {
+                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", audio: "Audio/Pirates.mp3" },
+                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", audio: "Audio/Haunted.mp3" }
+                }
+            },
+            CritterCountry: {
+                name: "Critter Country",
+                image: "images/Splash Mountain.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
+                ambientAudio: ["Audio/CC1.mp3","Audio/CC2.mp3","Audio/CC3.mp3", "Audio/CC4.mp3"],
+                rides: {
+                    Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", audio: "Audio/Splash.mp3" },
+                    WinnieThePooh: { name: "Winnie The Pooh", image: "images/The Many Adventures of Winnie the Pooh.png", audio: "Audio/Pooh.mp3" }
+                }
+            },
+            Frontierland: {
+                name: "Frontierland",
                 image: "images/adventureland.jpg",
-                icon: "images/icon_compass.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
                 rides: {
-                    indy: { name: "Indiana Jones Adventure", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
-                    jungle: { name: "Jungle Cruise", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
+                    BigThunder: { name: "Big Thunder Mountain Railroad", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
+                    Twain: { name: "The Mark Twain Riverboat", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
                 }
             },
             fantasyland: {
                 name: "Fantasyland",
                 image: "images/fantasyland.jpg",
-                icon: "images/icon_castle.png",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
                 ambientAudio: ["audio/fantasy_bgm1.mp3"],
                 rides: {
                     peterPan: { name: "Peter Pan's Flight", image: "images/peter_pan.jpg", audio: "audio/peter_pan.mp3" },
-                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
+                    smallWorld: { name: "It's a Small World", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Snowwhite: { name: "Snow White's Enchanted Wish", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Dumbo: { name: "Dumbo The Flying Elephant", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Toads: { name: "Mr. Toads Wild Ride", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Matterhorn: { name: "Matterhorn", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Story: { name: "Storybookland Canal Boats", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Carrousel: { name: "King Arthur Carrousel", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Pinnocchio: { name: "Pinocchio's Daring Journey", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Cups: { name: "Mad Tea Party", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Alice: { name: "Alice in Wonderland", image: "images/small_world.jpg", audio: "audio/small_world.mp3" },
+                    Casey: { name: "Casey Jr Circus Train", image: "images/small_world.jpg", audio: "audio/small_world.mp3" }
+                }
+            },
+            Toontown: {
+                name: "Toontown",
+                image: "images/adventureland.jpg",
+                  // 👉 UPDATE THESE ICON PATHS with your actual file names
+                icon: "images/icon_train.png", 
+                ambientAudio: ["audio/adventure_bgm1.mp3", "audio/adventure_bgm2.mp3"],
+                rides: {
+                    Railroad: { name: "Mickey and Minnie's Runaway Railway", image: "images/indy.jpg", audio: "audio/indy_theme.mp3" },
+                    Rodger: { name: "Rodger Rabbits Cartoon Spin", image: "images/jungle.jpg", audio: "audio/jungle_cruise_spiel.mp3" }
                 }
             },
             tomorrowland: {
                 name: "Tomorrowland",
-                image: "images/tomorrowland.jpg",
-                icon: "images/icon_rocket.png",
-                ambientAudio: ["audio/tomorrow_bgm1.mp3"],
+                image: "images/Tomorrowland.png",
+                icon: "images/Space Icon.png", 
+                ambientAudio: ["Audio/TL1.mp3","Audio/TL2.mp3"],
                 rides: {
-                    spaceMountain: { name: "Space Mountain", image: "images/space.jpg", audio: "audio/space_mountain.mp3" },
-                    starTours: { name: "Star Tours", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" }
+                    spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", audio: "audio/space_mountain.mp3" },
+                    starTours: { name: "Star Tours", image: "images/Star Tours.png", audio: "audio/star_tours.mp3" },
+                    Buzz: { name: "Buzz Lightyear's Space Ranger Spin", image: "images/Buzz.png", audio: "Audio/Buzz.mp3" },
+                    Carousel: { name: "Carousel of Progress", image: "images/Carousel of Progress.png", audio: "audio/star_tours.mp3" },
+                    Nemo: { name: "Finding Nemo Submarine Voyage", image: "images/star_tours.jpg", audio: "audio/star_tours.mp3" },
                 }
             }
         };
-
         const landsGrid = document.getElementById('lands-grid');
         const ridesSection = document.getElementById('rides-section');
         const ridesGrid = document.getElementById('rides-grid');
