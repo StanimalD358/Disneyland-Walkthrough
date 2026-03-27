@@ -83,60 +83,87 @@
             margin: 0;
         }
 
-        /* --- BUTTONS & ITINERARY STYLES --- */
-        .action-btn {
-            background-color: #0066cc;
-            color: white;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 6px;
-            border: none;
+        /* --- BUTTONS & ITINERARY STYLES (DISNEYFIED) --- */
+        button {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
-        .action-btn:hover { background-color: #004c99; }
-        
-        .start-btn {
-            background-color: #28a745;
-            width: 100%;
-            font-size: 20px;
-            padding: 18px;
-            margin-top: 30px;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .start-btn:hover { background-color: #218838; }
-        
-        .clear-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            padding: 8px 15px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .clear-btn:hover { background-color: #c82333; }
 
+        /* ADD TO ITINERARY (Castle Blue & Gold) */
+        .action-btn {
+            background: linear-gradient(135deg, #0047b3, #0066cc);
+            color: white;
+            padding: 14px 28px;
+            font-size: 18px;
+            border-radius: 30px; /* Friendly pill shape */
+            border: 2px solid #ffcc00; /* Gold trim */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .action-btn:hover { 
+            background: linear-gradient(135deg, #005ce6, #007ae6);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 15px rgba(255, 204, 0, 0.5); /* Gold hover glow */
+        }
+        
+        /* START WALKTHROUGH (Pixie Dust Gold) */
+        .start-btn {
+            background: linear-gradient(135deg, #ffcc00, #ffb300);
+            color: #000033; /* Dark navy text for contrast */
+            width: 100%;
+            font-size: 22px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 3px solid #ffe680;
+            border-radius: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: none; /* Keep text clean and readable */
+            box-shadow: 0 6px 12px rgba(255, 204, 0, 0.3);
+        }
+        .start-btn:hover { 
+            background: linear-gradient(135deg, #ffb300, #ffa600);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6);
+        }
+        
+        /* CLEAR ITINERARY (Mickey Red) */
+        .clear-btn {
+            background: linear-gradient(135deg, #e60000, #cc0000);
+            color: white;
+            border: 2px solid #990000;
+            border-radius: 20px;
+            font-size: 14px;
+            padding: 8px 18px;
+            margin-top: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .clear-btn:hover { 
+            background: linear-gradient(135deg, #ff1a1a, #e60000);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(230, 0, 0, 0.4);
+        }
+
+        /* SKIP BUTTON (Imagineer Purple) */
         #skip-btn {
-            background-color: #ff9800; 
-            display: none; 
+            background: linear-gradient(135deg, #8a2be2, #9932cc); 
+            color: white;
             margin-top: 15px;
             width: 100%;
-            font-size: 16px;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
+            font-size: 18px;
+            padding: 15px;
+            border: 2px solid #e6b3ff;
+            border-radius: 30px;
+            display: none; 
+            box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
         }
-        #skip-btn:hover { background-color: #e68a00; }
+        #skip-btn:hover { 
+            background: linear-gradient(135deg, #9932cc, #ab2be2);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 15px rgba(138, 43, 226, 0.6);
+        }
 
         #itinerary-container {
             text-align: left;
