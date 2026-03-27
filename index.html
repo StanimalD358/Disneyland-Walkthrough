@@ -15,8 +15,8 @@
             --accent-blue: #2979ff;
             --accent-gold: #ffc107;
             --player-bg: #181818;
-            --volume-progress: 100%;
-            --seek-progress: 0%;
+            --volume-progress: 100%; /* For Pixie Dust Volume */
+            --seek-progress: 0%;    /* For Pixie Dust Progress */
         }
 
         body {
@@ -29,79 +29,33 @@
         }
 
         /* --- APP LAYOUT --- */
-        .app-container { 
-            display: flex; 
-            flex: 1; 
-            overflow: hidden; 
-            padding-bottom: 120px; 
-            width: 100vw;
-        }
-
-        .main-content { 
-            flex: 1; /* Naturally grows to fill space */
-            padding: 30px; 
-            overflow-y: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* --- COLLAPSIBLE SIDEBAR --- */
-        .sidebar { 
-            width: 320px; 
-            background-color: #000000; 
-            padding: 20px; 
-            overflow-y: auto; 
-            border-left: 1px solid #282828;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .sidebar.collapsed {
-            width: 0;
-            padding: 0;
-            border: none;
-            opacity: 0;
-            pointer-events: none;
-        }
+        .app-container { display: flex; flex: 1; overflow: hidden; padding-bottom: 120px; }
+        .main-content { flex: 3; padding: 30px; overflow-y: hidden; display: flex; flex-direction: column; align-items: center; }
+        .sidebar { flex: 1; min-width: 320px; background-color: #000000; padding: 20px; overflow-y: auto; border-left: 1px solid #282828; }
 
         h1 { margin-top: 0; font-size: 28px; width: 100%; text-align: left; }
         p.subtitle { color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; width: 100%; text-align: left; }
         h3.section-title { font-size: 18px; color: var(--text-main); border-bottom: 1px solid var(--bg-hover); padding-bottom: 10px; margin-top: 20px; width: 100%; }
 
         /* --- MAP STYLES --- */
-        .map-outer-container { 
-            position: relative; width: 100%; flex: 1; display: flex; flex-direction: column; 
-            margin-top: 10px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); 
-            border: 2px solid #333; overflow: hidden; background-color: #000; 
-        }
+        .map-outer-container { position: relative; width: 100%; flex: 1; display: flex; flex-direction: column; margin-top: 10px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); border: 2px solid #333; overflow: hidden; background-color: #000; }
         .map-wrapper { position: relative; width: 100%; flex: 1; height: 100%; overflow: auto; cursor: grab; scrollbar-width: none; }
         .map-wrapper::-webkit-scrollbar { display: none; }
         .map-wrapper:active { cursor: grabbing; }
         #map-zoom-container { position: relative; width: 100%; transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         #park-map-image { width: 100%; display: block; height: auto; user-select: none; -webkit-user-drag: none; }
 
-        /* --- UI BUTTONS --- */
-        .zoom-controls { position: absolute; bottom: 20px; left: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
-        .sidebar-toggle-btn { 
-            position: absolute; top: 20px; right: 20px; z-index: 100;
-            background-color: rgba(30, 30, 30, 0.9); color: var(--accent-gold);
-            border: 1px solid #555; border-radius: 8px; padding: 10px 15px;
-            font-size: 14px; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px);
-            transition: all 0.2s;
-        }
-        .sidebar-toggle-btn:hover { background: var(--accent-blue); color: white; }
-
+        .zoom-controls { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
         .zoom-btn { background-color: rgba(30, 30, 30, 0.8); color: white; border: 1px solid #555; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(5px); transition: background-color 0.2s; }
         .zoom-btn:hover { background-color: var(--accent-blue); }
 
-        /* --- PINS & POPUPS --- */
+        /* --- PINS --- */
         .map-pin { position: absolute; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.8); transition: transform 0.2s; z-index: 10; }
         .ride-pin { width: 36px; height: 36px; background-color: var(--bg-card); border: 2px solid white; border-radius: 50%; animation: magicPulse 2.5s infinite; }
+        .map-pin:hover { transform: translate(-50%, -50%) scale(1.3); border-color: var(--accent-gold); z-index: 20; animation: none; }
         @keyframes magicPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
-
+        
+        /* --- POPUP --- */
         .custom-popup {
             position: absolute; background: var(--bg-card); border: 2px solid var(--accent-gold); border-radius: 8px;
             padding: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.8); z-index: 1000; min-width: 180px;
@@ -109,33 +63,39 @@
         }
         .custom-popup::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -8px; border-width: 8px; border-style: solid; border-color: var(--accent-gold) transparent transparent transparent; }
         .custom-popup h4 { margin: 0 0 10px 0; font-size: 14px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 8px; color: var(--text-main); }
-        .custom-popup button { display: block; width: 100%; margin: 6px 0 0 0; padding: 10px; background: var(--bg-hover); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; text-align: left; transition: 0.2s; }
+        .custom-popup button { display: block; width: 100%; margin: 6px 0 0 0; padding: 10px; background: var(--bg-hover); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; text-align: left; }
         .custom-popup button:hover { background: var(--accent-gold); color: black; }
         .close-popup { position: absolute; top: 5px; right: 8px; cursor: pointer; font-size: 14px; color: var(--text-muted); }
 
-        /* --- QUEUE ITEMS --- */
+        /* --- QUEUE STYLES --- */
+        .start-btn { background-color: var(--accent-gold); color: #000; width: 100%; border: none; border-radius: 30px; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .clear-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); border-radius: 20px; padding: 6px 15px; font-size: 12px; cursor: pointer; margin-top: 15px; }
         #itinerary-list { padding: 0; margin: 0; list-style: none; }
-        #itinerary-list li { padding: 10px; border-radius: 6px; display: flex; align-items: center; gap: 12px; transition: background 0.2s; margin-bottom: 8px; }
+        #itinerary-list li { padding: 10px; border-radius: 6px; display: flex; align-items: center; gap: 12px; transition: background 0.2s; }
         .queue-img { width: 44px; height: 44px; border-radius: 4px; object-fit: cover; }
+        .queue-info { flex: 1; overflow: hidden; }
         .queue-title { color: var(--text-main); font-weight: bold; font-size: 14px; display: block; }
         .queue-subtitle { font-size: 12px; color: var(--text-muted); display: block; }
+        .remove-item-btn { background: transparent; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; }
         .active-item { background-color: rgba(255, 193, 7, 0.1) !important; border-left: 3px solid var(--accent-gold); }
-        .start-btn { background-color: var(--accent-gold); color: #000; width: 100%; border: none; border-radius: 30px; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.2s; }
-        .start-btn:hover { transform: scale(1.02); }
-        .clear-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); border-radius: 20px; padding: 6px 15px; font-size: 12px; cursor: pointer; margin-top: 15px; }
 
         /* --- PLAYER BAR --- */
-        .player-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 120px; background-color: var(--player-bg); border-top: 1px solid #282828; display: flex; align-items: center; padding: 0 30px; z-index: 1000; }
+        .player-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 120px; background-color: var(--player-bg); border-top: 1px solid #282828; display: flex; align-items: center; padding: 0 30px; z-index: 100; }
         .now-playing-info { display: flex; align-items: center; width: 30%; min-width: 320px; }
         #np-image { width: 80px; height: 80px; border-radius: 6px; object-fit: cover; margin-right: 20px; display: none; }
+        .np-text { display: flex; flex-direction: column; overflow: hidden; }
+        #np-title { font-size: 18px; font-weight: bold; }
+        #np-subtitle { font-size: 14px; color: var(--text-muted); }
+
         .player-center { flex: 1; display: flex; flex-direction: column; align-items: center; max-width: 50%; }
         .player-controls { margin-bottom: 12px; display: flex; align-items: center; gap: 25px; }
-        #play-pause-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--accent-blue); border: 2px solid #ffcc00; display: none; align-items: center; justify-content: center; cursor: pointer; }
+        .control-btn { background: transparent; color: var(--text-main); border: none; cursor: pointer; display: none; }
+        #play-pause-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--accent-blue); border: 2px solid #ffcc00; display: none; align-items: center; justify-content: center;}
         .icon-play, .icon-pause { width: 30px; height: 30px; fill: white; display: none; }
         #play-pause-btn.is-paused .icon-play { display: block; margin-left: 4px; }
         #play-pause-btn.is-playing .icon-pause { display: block; }
 
-        /* --- PIXIE DUST SLIDERS --- */
+        /* --- PROGRESS SLIDER (PIXIE DUST) --- */
         .progress-container { display: none; align-items: center; width: 100%; gap: 10px; }
         #progress-slider { 
             flex: 1; -webkit-appearance: none; background: transparent; height: 40px; cursor: pointer;
@@ -149,12 +109,15 @@
         #progress-slider::-webkit-slider-thumb { 
             -webkit-appearance: none; height: 40px; width: 40px; background-image: var(--thumb-icon); 
             background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -17px;
-            filter: drop-shadow(0 0 5px var(--accent-gold)); transition: 0.1s;
+            filter: drop-shadow(0 0 5px var(--accent-gold));
         }
 
+        /* --- VOLUME SLIDER (PIXIE DUST) --- */
         .player-right { width: 30%; display: flex; justify-content: flex-end; }
         .volume-container { display: none; align-items: center; gap: 10px; width: 150px; }
-        #volume-slider { flex: 1; -webkit-appearance: none; background: transparent; cursor: pointer; }
+        #volume-slider { 
+            flex: 1; -webkit-appearance: none; background: transparent; cursor: pointer; 
+        }
         #volume-slider::-webkit-slider-runnable-track { 
             width: 100%; height: 4px; 
             background: linear-gradient(to right, var(--accent-gold) 0%, var(--accent-gold) var(--volume-progress), #444 var(--volume-progress), #444 100%);
@@ -171,18 +134,14 @@
 <body>
 
     <div class="app-container">
-        <div class="main-content" id="main-content">
+        <div class="main-content">
             <h1>Disneyland Audio Map</h1>
-            <p class="subtitle">Select your tracks on the map to build your journey.</p>
-            
+            <p class="subtitle">Pick your tracks and build your magic journey.</p>
             <div class="map-outer-container">
-                <button class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ Toggle Queue</button>
-                
                 <div class="zoom-controls">
                     <button class="zoom-btn" onclick="zoomMap(1)">+</button>
                     <button class="zoom-btn" onclick="zoomMap(-1)">−</button>
                 </div>
-                
                 <div class="map-wrapper" id="map-wrapper">
                     <div id="map-zoom-container">
                         <img id="park-map-image" src="images/ParkMap.png" alt="Map">
@@ -191,12 +150,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="sidebar" id="sidebar">
+        <div class="sidebar">
             <h3 class="section-title">Up Next</h3>
-            <ul id="itinerary-list">
-                <li style="color: #555;">Queue is empty. Click a pin to add.</li>
-            </ul>
+            <ul id="itinerary-list"><li>Queue is empty</li></ul>
             <button class="clear-btn" onclick="clearItinerary()">Clear Queue</button>
             <button class="start-btn" onclick="startWalkthrough()">▶ Play Walkthrough</button>
         </div>
@@ -205,10 +161,7 @@
     <div class="player-bar">
         <div class="now-playing-info">
             <img id="np-image" src="">
-            <div class="np-text">
-                <div id="np-title">Ready</div>
-                <div id="np-subtitle">Build your magic journey</div>
-            </div>
+            <div class="np-text"><div id="np-title">Ready</div><div id="np-subtitle">Build your queue</div></div>
         </div>
         <div class="player-center">
             <div class="player-controls">
@@ -216,8 +169,8 @@
                     <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                 </button>
-                <button id="skip-btn" class="control-btn" onclick="skipStep()" style="display:none; background:none; border:none; cursor:pointer;">
-                    <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+                <button id="skip-btn" class="control-btn" onclick="skipStep()" style="display:none">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
                 </button>
             </div>
             <div class="progress-container" id="progress-container">
@@ -243,34 +196,29 @@
                 name: "Main Street, U.S.A.", image: "images/Main Street.png", icon: "images/Trolly.png", 
                 ambientAudio: ["Audio/MS1.mp3"],
                 rides: {
-                    train: { name: "Disneyland Railroad", image: "images/Disneyland Railroad.png", mapX: 56.4, mapY: 89.9, audioTracks: [{title: "POV Journey", file: "Audio/Train.mp3"}] }
+                    train: { name: "Railroad", image: "images/Disneyland Railroad.png", mapX: 56.4, mapY: 89.9, audioTracks: [{title: "POV", file: "Audio/Train.mp3"}] }
                 }
             },
             adventureland: {
                 name: "Adventureland", image: "images/Adventureland.png", icon: "images/IndyCar.png", 
                 ambientAudio: ["Audio/Adventure1.mp3"],
                 rides: {
-                    indy: { name: "Indiana Jones", image: "images/Indiana Jones Adventure.png", mapX: 40.7, mapY: 69.7, audioTracks: [{title: "Full Ride Audio", file: "Audio/IndyRide.mp3"}] }
+                    indy: { name: "Indiana Jones", image: "images/Indiana Jones Adventure.png", mapX: 40.7, mapY: 69.7, audioTracks: [{title: "Ride", file: "Audio/IndyRide.mp3"}] }
                 }
             }
+            // ... Add your other lands here exactly as you had them
         };
 
         let itinerary = [], playbackQueue = [], nextItemId = 0, isWalkthroughActive = false, masterVolume = 1.0;
-        let activePlayer = 1, fadeInterval, activePopup = null;
-        
         const player1 = document.getElementById('player-1'), player2 = document.getElementById('player-2');
+        let activePlayer = 1, fadeInterval, activePopup = null;
+
+        const mapPinsContainer = document.getElementById('map-pins-container');
         const progressSlider = document.getElementById('progress-slider');
         const volumeSlider = document.getElementById('volume-slider');
 
-        // --- SIDEBAR COLLAPSE LOGIC ---
-        function toggleSidebar() {
-            const sb = document.getElementById('sidebar');
-            sb.classList.toggle('collapsed');
-        }
-
         // --- MAP RENDER ---
         function renderPins() {
-            const container = document.getElementById('map-pins-container');
             for (let land in parkData) {
                 for (let ride in parkData[land].rides) {
                     let r = parkData[land].rides[ride];
@@ -278,10 +226,9 @@
                     div.className = 'map-pin ride-pin';
                     div.style.left = r.mapX + '%'; div.style.top = r.mapY + '%';
                     div.style.backgroundImage = `url('${r.image}')`;
-                    div.style.backgroundSize = 'cover';
                     div.setAttribute('data-name', r.name);
                     div.onclick = (e) => { e.stopPropagation(); openPopup(land, ride); };
-                    container.appendChild(div);
+                    mapPinsContainer.appendChild(div);
                 }
             }
         }
@@ -301,14 +248,13 @@
 
         function queueTrack(l, r, idx) {
             if (activePopup) activePopup.remove();
-            const list = document.getElementById('itinerary-list');
-            if (itinerary.length === 0) list.innerHTML = '';
+            if (itinerary.length === 0) document.getElementById('itinerary-list').innerHTML = '';
             let id = nextItemId++;
             itinerary.push({ land: l, ride: r, trackIdx: idx, id: id });
             let li = document.createElement('li');
             li.id = "item-" + id;
             li.innerHTML = `<img src="${parkData[l].rides[r].image}" class="queue-img"><div class="queue-info"><span class="queue-title">${parkData[l].rides[r].name}</span><span class="queue-subtitle">${parkData[l].name}</span></div>`;
-            list.appendChild(li);
+            document.getElementById('itinerary-list').appendChild(li);
         }
 
         function startWalkthrough() {
@@ -317,12 +263,12 @@
             playbackQueue = [];
             itinerary.forEach(item => {
                 let l = parkData[item.land];
-                playbackQueue.push({ audio: l.ambientAudio[0], image: l.image, icon: l.icon, title: "Walking Through...", subtitle: l.name, target: "item-"+item.id });
+                playbackQueue.push({ audio: l.ambientAudio[0], image: l.image, icon: l.icon, title: "Walking...", subtitle: l.name, target: "item-"+item.id });
                 let r = l.rides[item.ride];
                 playbackQueue.push({ audio: r.audioTracks[item.trackIdx].file, image: r.image, icon: l.icon, title: r.name, subtitle: l.name, target: "item-"+item.id });
             });
             document.getElementById('play-pause-btn').style.display = 'flex';
-            document.getElementById('skip-btn').style.display = 'block';
+            document.getElementById('skip-btn').style.display = 'flex';
             document.getElementById('progress-container').style.display = 'flex';
             document.getElementById('volume-container').style.display = 'flex';
             playNext();
@@ -344,6 +290,7 @@
             document.getElementById('np-image').src = step.image;
             document.getElementById('np-image').style.display = 'block';
             
+            // Set Icon for scrubber
             progressSlider.style.setProperty('--thumb-icon', `url('${step.icon}')`);
 
             let cur = activePlayer === 1 ? player1 : player2;
@@ -357,14 +304,20 @@
             });
         }
 
-        // --- PIXIE DUST UI UPDATES ---
+        // --- PROGRESS & VOLUME PIXIE DUST LOGIC ---
         function updateUI() {
             const p = activePlayer === 1 ? player1 : player2;
             if (!p.duration) return;
+            
+            // Update Time Text
             document.getElementById('time-current').textContent = formatTime(p.currentTime);
             document.getElementById('time-total').textContent = formatTime(p.duration);
+            
+            // Update Scrubber Position
             progressSlider.max = p.duration;
             progressSlider.value = p.currentTime;
+            
+            // Update Pixie Dust Progress (Fill)
             const percent = (p.currentTime / p.duration) * 100;
             document.documentElement.style.setProperty('--seek-progress', percent + '%');
         }
@@ -381,6 +334,7 @@
             masterVolume = e.target.value / 100;
             const p = activePlayer === 1 ? player1 : player2;
             p.volume = masterVolume;
+            // Volume Pixie Dust
             document.documentElement.style.setProperty('--volume-progress', e.target.value + '%');
         };
 
@@ -390,12 +344,19 @@
             return m + ":" + (sec < 10 ? "0" + sec : sec);
         }
 
+        // --- FADES ---
         function crossfade(out, inv) {
             let p = 0;
             fadeInterval = setInterval(() => {
                 p += 0.05;
-                if (p >= 1) { clearInterval(fadeInterval); inv.volume = masterVolume; out.pause(); } 
-                else { inv.volume = p * masterVolume; out.volume = (1 - p) * masterVolume; }
+                if (p >= 1) { 
+                    clearInterval(fadeInterval); 
+                    inv.volume = masterVolume; 
+                    out.pause(); 
+                } else {
+                    inv.volume = p * masterVolume;
+                    out.volume = (1 - p) * masterVolume;
+                }
             }, 100);
         }
 
@@ -419,7 +380,7 @@
         player1.onended = playNext;
         player2.onended = playNext;
 
-        // --- ZOOM LOGIC ---
+        // --- ZOOM/PAN (Keep your existing logic) ---
         let zoom = 100;
         function zoomMap(d) {
             zoom = Math.min(400, Math.max(100, zoom + (d * 50)));
