@@ -30,166 +30,64 @@
         }
 
         /* --- MAIN APP LAYOUT --- */
-        .app-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            padding-bottom: 120px; 
-        }
-
-        .main-content {
-            flex: 3;
-            padding: 30px;
-            overflow-y: hidden; 
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-        }
-
-        .sidebar {
-            flex: 1;
-            min-width: 320px; 
-            background-color: #000000;
-            padding: 20px;
-            overflow-y: auto;
-            border-left: 1px solid #282828;
-        }
+        .app-container { display: flex; flex: 1; overflow: hidden; padding-bottom: 120px; }
+        .main-content { flex: 3; padding: 30px; overflow-y: hidden; display: flex; flex-direction: column; align-items: center; }
+        .sidebar { flex: 1; min-width: 320px; background-color: #000000; padding: 20px; overflow-y: auto; border-left: 1px solid #282828; }
 
         h1 { margin-top: 0; font-size: 28px; width: 100%; text-align: left; flex-shrink: 0; }
         p.subtitle { color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; width: 100%; text-align: left; flex-shrink: 0; }
+        h3.section-title { font-size: 18px; color: var(--text-main); border-bottom: 1px solid var(--bg-hover); padding-bottom: 10px; margin-top: 20px; width: 100%; }
 
-        h3.section-title {
-            font-size: 18px;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--bg-hover);
-            padding-bottom: 10px;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        /* =========================================
-           ✨ DYNAMIC PAN & ZOOM MAP STYLES ✨ 
-           ========================================= */
-        .map-outer-container {
-            position: relative;
-            width: 100%;
-            flex: 1; 
-            display: flex;
-            flex-direction: column;
-            margin-top: 10px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            border: 2px solid #333;
-            overflow: hidden; 
-            background-color: #000;
-        }
-
-        .map-wrapper {
-            position: relative;
-            width: 100%;
-            flex: 1; 
-            height: 100%; 
-            overflow: auto; 
-            cursor: grab;
-            
-            -ms-overflow-style: none;  
-            scrollbar-width: none;  
-        }
+        /* --- DYNAMIC PAN & ZOOM MAP STYLES --- */
+        .map-outer-container { position: relative; width: 100%; flex: 1; display: flex; flex-direction: column; margin-top: 10px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); border: 2px solid #333; overflow: hidden; background-color: #000; }
+        .map-wrapper { position: relative; width: 100%; flex: 1; height: 100%; overflow: auto; cursor: grab; -ms-overflow-style: none; scrollbar-width: none; }
         .map-wrapper::-webkit-scrollbar { display: none; }
         .map-wrapper:active { cursor: grabbing; }
+        #map-zoom-container { position: relative; width: 100%; transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+        #park-map-image { width: 100%; display: block; height: auto; user-select: none; -webkit-user-drag: none; }
 
-        #map-zoom-container {
-            position: relative;
-            width: 100%; 
-            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
-        }
-
-        #park-map-image {
-            width: 100%;
-            display: block;
-            height: auto;
-            user-select: none; 
-            -webkit-user-drag: none;
-        }
-
-        .zoom-controls {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        .zoom-btn {
-            background-color: rgba(30, 30, 30, 0.8);
-            color: white;
-            border: 1px solid #555;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+        .zoom-controls { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
+        .zoom-btn { background-color: rgba(30, 30, 30, 0.8); color: white; border: 1px solid #555; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(5px); transition: background-color 0.2s, transform 0.1s; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .zoom-btn:hover { background-color: var(--accent-blue); }
         .zoom-btn:active { transform: scale(0.9); }
 
-        /* --- UPDATED: PICTURE PINS & MAGIC PULSE --- */
-        .map-pin {
-            position: absolute;
-            transform: translate(-50%, -50%); 
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.8);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s;
-            z-index: 10;
-        }
-
-        .ride-pin {
-            width: 36px; /* Bigger to show pictures clearly */
-            height: 36px; 
-            background-color: var(--bg-card); /* Fallback color */
-            border: 2px solid white; 
-            border-radius: 50%; 
-            /* The continuous glowing pulse animation */
-            animation: magicPulse 2.5s infinite;
-        }
-
-        /* Stops the pulse and zooms in when you hover over the picture */
-        .map-pin:hover {
-            transform: translate(-50%, -50%) scale(1.3);
-            border-color: var(--accent-gold);
-            z-index: 20; 
-            animation: none; 
-        }
-
-        /* The Pulse Keyframes */
-        @keyframes magicPulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-        }
-
-        .map-pin::after {
-            content: attr(data-name);
-            position: absolute;
-            bottom: 130%; left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.9); color: white;
-            padding: 6px 10px; border-radius: 6px;
-            font-size: 12px; font-weight: bold;
-            white-space: nowrap; opacity: 0;
-            pointer-events: none; transition: opacity 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            border: 1px solid #444;
-        }
+        /* --- PICTURE PINS & MAGIC PULSE --- */
+        .map-pin { position: absolute; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.8); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s; z-index: 10; }
+        .ride-pin { width: 36px; height: 36px; background-color: var(--bg-card); border: 2px solid white; border-radius: 50%; animation: magicPulse 2.5s infinite; }
+        .map-pin:hover { transform: translate(-50%, -50%) scale(1.3); border-color: var(--accent-gold); z-index: 20; animation: none; }
+        @keyframes magicPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+        
+        .map-pin::after { content: attr(data-name); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: white; padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.5); border: 1px solid #444; }
         .map-pin:hover::after { opacity: 1; }
+
+        /* --- ✨ NEW: CUSTOM AUDIO POPUP MENU ✨ --- */
+        .custom-popup {
+            position: absolute;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.8);
+            z-index: 1000;
+            min-width: 180px;
+            /* Center horizontally and move it up above the pin */
+            transform: translate(-50%, calc(-100% - 25px)); 
+        }
+        /* The little triangle pointing down at the pin */
+        .custom-popup::after {
+            content: ''; position: absolute; top: 100%; left: 50%; margin-left: -8px;
+            border-width: 8px; border-style: solid;
+            border-color: var(--accent-gold) transparent transparent transparent;
+        }
+        .custom-popup h4 { margin: 0 0 10px 0; font-size: 14px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 8px; color: var(--text-main); }
+        .custom-popup button {
+            display: block; width: 100%; margin: 6px 0 0 0; padding: 10px;
+            background: var(--bg-hover); color: white; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 13px; text-align: left; transition: background 0.2s, color 0.2s, transform 0.1s;
+        }
+        .custom-popup button:hover { background: var(--accent-gold); color: black; transform: scale(1.02); }
+        .close-popup { position: absolute; top: 5px; right: 8px; cursor: pointer; font-size: 14px; color: var(--text-muted); }
+        .close-popup:hover { color: #ff4d4d; }
 
         /* --- BUTTONS & QUEUE LIST --- */
         .start-btn { background-color: var(--accent-gold); color: #000; width: 100%; border: none; border-radius: 30px; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: transform 0.2s; }
@@ -204,11 +102,9 @@
         .queue-info { display: flex; flex-direction: column; overflow: hidden; flex: 1; }
         .queue-title { color: var(--text-main); font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
         .queue-subtitle { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
         .remove-item-btn { background: transparent; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 5px 10px; opacity: 0.3; transition: opacity 0.2s, color 0.2s, transform 0.2s; }
         #itinerary-list li:hover .remove-item-btn { opacity: 1; }
         .remove-item-btn:hover { color: #ff4d4d; transform: scale(1.2); }
-        
         .active-item { background-color: rgba(255, 193, 7, 0.1) !important; border-left: 3px solid var(--accent-gold); padding-left: 7px !important; }
         .active-item .queue-title { color: var(--accent-gold); }
 
@@ -237,19 +133,14 @@
         #time-total { text-align: left; }
         #progress-slider { flex: 1; margin: 0 20px; cursor: pointer; -webkit-appearance: none; background: transparent; height: 48px; --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); }
         #progress-slider::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
-        #progress-slider::-moz-range-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
         #progress-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 48px; width: 48px; border-radius: 0; border: none; outline: none; background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; margin-top: -20px; filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s; }
-        #progress-slider::-moz-range-thumb { height: 48px; width: 48px; border-radius: 0; border: none; outline: none; background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s; }
         .player-right { width: 30%; min-width: 320px; display: flex; justify-content: center; align-items: center; }
         .volume-container { display: none; align-items: center; gap: 12px; width: 160px; }
         #vol-icon { font-size: 20px; color: var(--text-muted); }
         #volume-slider { flex: 1; -webkit-appearance: none; background: transparent; height: 24px; cursor: pointer; }
         #volume-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
-        #volume-slider::-moz-range-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
         #volume-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background-color: transparent; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>'); background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -10px; filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; }
         #volume-slider::-webkit-slider-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
-        #volume-slider::-moz-range-thumb { height: 24px; width: 24px; border-radius: 50%; border: none; background-color: transparent; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>'); background-size: contain; background-repeat: no-repeat; background-position: center; filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s; }
-        #volume-slider::-moz-range-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
         .hidden-player { display: none; }
 
         /* --- MOBILE RESPONSIVENESS --- */
@@ -274,8 +165,6 @@
             #skip-btn svg { width: 18px; height: 18px; }
             #progress-slider { height: 36px; margin: 0 10px; }
             #progress-slider::-webkit-slider-thumb { height: 36px; width: 36px; margin-top: -14px; }
-            #progress-slider::-moz-range-thumb { height: 36px; width: 36px; margin-top: -14px; }
-            .remove-item-btn { opacity: 0.8; font-size: 20px; padding: 10px; }
         }
     </style>
 </head>
@@ -284,7 +173,7 @@
     <div class="app-container">
         <div class="main-content">
             <h1>Disneyland Audio Map</h1>
-            <p class="subtitle">Click pins on the map to instantly add them to your queue.</p>
+            <p class="subtitle">Click pins on the map to choose audio and build your queue.</p>
 
             <div class="map-outer-container">
                 <div class="zoom-controls">
@@ -293,12 +182,11 @@
                 </div>
                 <div class="map-wrapper" id="map-wrapper">
                     <div id="map-zoom-container">
-                        <img id="park-map-image" src="images/ParkMap.png" alt="Park Map" draggable="false" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'800\\' height=\\'600\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23333\\'/><text x=\\'50%\\' y=\\'50%\\' fill=\\'white\\' font-size=\\'24\\' font-family=\\'sans-serif\\' text-anchor=\\'middle\\'>Missing Map Image (images/ParkMap.png)</text></svg>'">
+                        <img id="park-map-image" src="images/ParkMap.png" alt="Park Map" draggable="false">
                         <div id="map-pins-container"></div>
                     </div>
                 </div>
             </div>
-            
         </div>
 
         <div class="sidebar">
@@ -347,90 +235,90 @@
     <audio id="player-2" class="hidden-player"></audio>
 
     <script>
+        // --- DATA UPDATED: "audio" is now "audioTracks" arrays ---
         const parkData = {
             mainStreet: {
                 name: "Main Street, U.S.A.", image: "images/Main Street.png", icon: "images/Trolly.png", 
-                ambientAudio: ["Audio/MS1.mp3", "Audio/MS2.mp3", "Audio/MS3.mp3", "Audio/MS4.mp3",],
+                ambientAudio: ["Audio/MS1.mp3", "Audio/MS2.mp3", "Audio/MS3.mp3", "Audio/MS4.mp3"],
                 rides: {
-                    train: { name: "Disneyland Railroad", image: "images/Disneyland Railroad.png", audio: "Audio/Train.mp3", mapX: 56.4, mapY: 89.9 },
-                    cinema: { name: "Main Street Shops", image: "images/Main Street Emporium.png", audio: "Audio/Shops.mp3", mapX: 54.9, mapY: 77.3 }
+                    train: { name: "Disneyland Railroad", image: "images/Disneyland Railroad.png", mapX: 56.4, mapY: 89.9, audioTracks: [{title: "On-Ride POV", file: "Audio/Train.mp3"}, {title: "Grand Circle Tour", file: "Audio/Train_Tour.mp3"}] },
+                    cinema: { name: "Main Street Shops", image: "images/Main Street Emporium.png", mapX: 54.9, mapY: 77.3, audioTracks: [{title: "Store Music", file: "Audio/Shops.mp3"}] }
                 }
             },
             adventureland: {
                 name: "Adventureland", image: "images/Adventureland.png", icon: "images/IndyCar.png", 
                 ambientAudio: ["Audio/Adventure1.mp3", "Audio/Adventure2.mp3", "Audio/Adventure3.mp3", "Audio/Adventure4.mp3"],
                 rides: {
-                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", audio: "Audio/IndyRide.mp3", mapX: 40.7, mapY: 69.7 },
-                    jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", audio: "Audio/Jungle.mp3", mapX: 44.7, mapY: 68.5 },
-                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", audio: "Audio/TikiRoom.mp3", mapX: 48.9, mapY: 64.8 },
-                    Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", audio: "Audio/Tarzan.mp3", mapX: 38.2, mapY: 71.1 }
+                    indy: { name: "Indiana Jones Adventure", image: "images/Indiana Jones Adventure.png", mapX: 40.7, mapY: 69.7, audioTracks: [{title: "Ride POV", file: "Audio/IndyRide.mp3"}, {title: "Queue Audio", file: "Audio/IndyQueue.mp3"}] },
+                    jungle: { name: "Jungle Cruise", image: "images/Jungle Cruise.png", mapX: 44.7, mapY: 68.5, audioTracks: [{title: "Skipper Audio", file: "Audio/Jungle.mp3"}] },
+                    Tiki: { name: "The Tiki Room", image: "images/Enchanted Tiki Room.png", mapX: 48.9, mapY: 64.8, audioTracks: [{title: "Full Show", file: "Audio/TikiRoom.mp3"}] },
+                    Tarzan: { name: "Tarzan's Treehouse", image: "images/Adventureland Tree House.png", mapX: 38.2, mapY: 71.1, audioTracks: [{title: "Walkthrough", file: "Audio/Tarzan.mp3"}] }
                 }
             },
             NewOrleansSquare: {
                 name: "New Orleans Square", image: "images/New Orleans Square.png", icon: "images/FlagIcon.png", 
                 ambientAudio: ["Audio/NOS1.mp3", "Audio/NOS2.mp3","Audio/NOS3.mp3"],
                 rides: {
-                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", audio: "Audio/Pirates.mp3", mapX: 34.2, mapY: 71.0 },
-                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", audio: "Audio/Haunted.mp3", mapX: 17.7, mapY: 64 }
+                    Pirates: { name: "Pirates of the Carribean", image: "images/Pirates of the Caribbean.png", mapX: 34.2, mapY: 71.0, audioTracks: [{title: "Ride POV", file: "Audio/Pirates.mp3"}, {title: "Queue Music", file: "Audio/PiratesQueue.mp3"}] },
+                    HauntedMansion: { name: "Haunted Mansion", image: "images/Haunted Mansion.png", mapX: 17.7, mapY: 64, audioTracks: [{title: "Ghost Host POV", file: "Audio/Haunted.mp3"}, {title: "Foyer Music", file: "Audio/HauntedFoyer.mp3"}] }
                 }
             },
             CritterCountry: {
                 name: "Critter Country", image: "images/Splash Mountain.png", icon: "images/SplashIcon.png", 
                 ambientAudio: ["Audio/CC1.mp3","Audio/CC2.mp3","Audio/CC3.mp3", "Audio/CC4.mp3"],
                 rides: {
-                    Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", audio: "Audio/Splash.mp3", mapX: 13.9, mapY: 58.4 },
-                    WinnieThePooh: { name: "Winnie The Pooh", image: "images/The Many Adventures of Winnie the Pooh.png", audio: "Audio/Pooh.mp3", mapX: 5.8, mapY: 53.1 }
+                    Splash: { name: "Splash Mountain", image: "images/Splash Mountain.png", mapX: 13.9, mapY: 58.4, audioTracks: [{title: "Ride POV", file: "Audio/Splash.mp3"}] },
+                    WinnieThePooh: { name: "Winnie The Pooh", image: "images/The Many Adventures of Winnie the Pooh.png", mapX: 5.8, mapY: 53.1, audioTracks: [{title: "Ride POV", file: "Audio/Pooh.mp3"}] }
                 }
             },
             Frontierland: {
                 name: "Frontierland", image: "images/Frontierland.png", icon: "images/ThunderIcon.png", 
                 ambientAudio: ["Audio/Frontier1.mp3", "Audio/Frontier2.mp3", "Audio/Frontier3.mp3"],
                 rides: {
-                    BigThunder: { name: "Big Thunder Mountain Railroad", image: "images/Big Thunder Mountain Railroad.png", audio: "Audio/Big Thunder.mp3", mapX: 40, mapY: 45.9 },
-                    Twain: { name: "The Mark Twain Riverboat", image: "images/Mark Twain River Boat.png", audio: "Audio/TShip.mp3", mapX: 37, mapY: 56.4 }
+                    BigThunder: { name: "Big Thunder Mountain", image: "images/Big Thunder Mountain Railroad.png", mapX: 40, mapY: 45.9, audioTracks: [{title: "Ride POV", file: "Audio/Big Thunder.mp3"}] },
+                    Twain: { name: "Mark Twain Riverboat", image: "images/Mark Twain River Boat.png", mapX: 37, mapY: 56.4, audioTracks: [{title: "Full Voyage", file: "Audio/TShip.mp3"}] }
                 }
             },
             fantasyland: {
                 name: "Fantasyland", image: "images/Sleeping Beauty Castle.png", icon: "images/CastleIcon.png", 
                 ambientAudio: ["Audio/Fantasy1.mp3", "Audio/Fantasy2.mp3", "Audio/Fantasy3.mp3", "Audio/Fantasy4.mp3"],
                 rides: {
-                    peterPan: { name: "Peter Pan's Flight", image: "images/Dark Rides 3.png", audio: "Audio/Peter.mp3", mapX: 58.4, mapY: 42 },
-                    smallWorld: { name: "It's a Small World", image: "images/It_s a Small World.png", audio: "Audio/SmallWorld.mp3", mapX: 69.7, mapY: 24 },
-                    Snowwhite: { name: "Snow White's Enchanted Wish", image: "images/Dark Rides 1.png", audio: "Audio/Snow.mp3", mapX: 54.6, mapY: 42.9 },
-                    Dumbo: { name: "Dumbo The Flying Elephant", image: "images/Dumbo Flying Elephants.png", audio: "Audio/Dumbo.mp3", mapX: 57.2, mapY: 35.8 },
-                    Toads: { name: "Mr. Toads Wild Ride", image: "images/Dark Rides 4.png", audio: "Audio/Toads.mp3", mapX: 60.2, mapY: 39.7 },
-                    Matterhorn: { name: "Matterhorn", image: "images/Matterhorn Bobsleds.png", audio: "Audio/Matterhron.mp3", mapX: 70, mapY: 43.3 },
-                    Story: { name: "Storybookland Canal Boats", image: "images/Storybook Land.png", audio: "Audio/Storybook.mp3", mapX: 66.1, mapY: 35.1 },
-                    Carrousel: { name: "King Arthur Carrousel", image: "images/Carrousel.jpg", audio: "Audio/Carrousel.mp3", mapX: 56.6, mapY: 39.7 },
-                    Pinnocchio: { name: "Pinocchio's Daring Journey", image: "images/Dark Rides 2.png", audio: "Audio/Pinocchios.mp3", mapX: 54, mapY: 41.3 },
-                    Cups: { name: "Mad Tea Party", image: "images/Cups.png", audio: "Audio/Teacups.mp3", mapX: 65.1, mapY: 38.7 },
-                    Alice: { name: "Alice in Wonderland", image: "images/Alice in Wonderland.png", audio: "Audio/Alice.mp3", mapX: 64.5, mapY: 41.6 },
-                    Casey: { name: "Casey Jr Circus Train", image: "images/Casey.png", audio: "Audio/Casey.mp3", mapX: 53.5, mapY: 34.5 }
+                    peterPan: { name: "Peter Pan's Flight", image: "images/Dark Rides 3.png", mapX: 58.4, mapY: 42, audioTracks: [{title: "Ride POV", file: "Audio/Peter.mp3"}, {title: "Queue Audio", file: "Audio/PeterQueue.mp3"}] },
+                    smallWorld: { name: "It's a Small World", image: "images/It_s a Small World.png", mapX: 69.7, mapY: 24, audioTracks: [{title: "Ride POV", file: "Audio/SmallWorld.mp3"}] },
+                    Snowwhite: { name: "Snow White", image: "images/Dark Rides 1.png", mapX: 54.6, mapY: 42.9, audioTracks: [{title: "Ride POV", file: "Audio/Snow.mp3"}] },
+                    Dumbo: { name: "Dumbo The Flying Elephant", image: "images/Dumbo Flying Elephants.png", mapX: 57.2, mapY: 35.8, audioTracks: [{title: "Ride POV", file: "Audio/Dumbo.mp3"}] },
+                    Toads: { name: "Mr. Toads Wild Ride", image: "images/Dark Rides 4.png", mapX: 60.2, mapY: 39.7, audioTracks: [{title: "Ride POV", file: "Audio/Toads.mp3"}] },
+                    Matterhorn: { name: "Matterhorn", image: "images/Matterhorn Bobsleds.png", mapX: 70, mapY: 43.3, audioTracks: [{title: "Left Track POV", file: "Audio/Matterhron.mp3"}, {title: "Right Track POV", file: "Audio/Matterhron2.mp3"}] },
+                    Story: { name: "Storybook Canal Boats", image: "images/Storybook Land.png", mapX: 66.1, mapY: 35.1, audioTracks: [{title: "Tour Guide", file: "Audio/Storybook.mp3"}] },
+                    Carrousel: { name: "King Arthur Carrousel", image: "images/Carrousel.jpg", mapX: 56.6, mapY: 39.7, audioTracks: [{title: "Ride Music", file: "Audio/Carrousel.mp3"}] },
+                    Pinnocchio: { name: "Pinocchio's Journey", image: "images/Dark Rides 2.png", mapX: 54, mapY: 41.3, audioTracks: [{title: "Ride POV", file: "Audio/Pinocchios.mp3"}] },
+                    Cups: { name: "Mad Tea Party", image: "images/Cups.png", mapX: 65.1, mapY: 38.7, audioTracks: [{title: "Ride Music", file: "Audio/Teacups.mp3"}] },
+                    Alice: { name: "Alice in Wonderland", image: "images/Alice in Wonderland.png", mapX: 64.5, mapY: 41.6, audioTracks: [{title: "Ride POV", file: "Audio/Alice.mp3"}] },
+                    Casey: { name: "Casey Jr Circus Train", image: "images/Casey.png", mapX: 53.5, mapY: 34.5, audioTracks: [{title: "Ride POV", file: "Audio/Casey.mp3"}] }
                 }
             },
             Toontown: {
                 name: "Toontown", image: "images/Toontown Area Music.png", icon: "images/ToonTownnIcon.png", 
                 ambientAudio: ["Audio/Toon1.mp3", "Audio/Toon2.mp3"],
                 rides: {
-                    Railroad: { name: "Mickey and Minnie's Runaway Railway", image: "images/Runaway.jpg", audio: "Audio/Runaway.mp3", mapX: 63.8, mapY: 9.4 },
-                    Rodger: { name: "Rodger Rabbits Cartoon Spin", image: "images/Toontown Area Music.png", audio: "Audio/Rabbit.mp3", mapX: 67.8, mapY: 12.9 }
+                    Railroad: { name: "Runaway Railway", image: "images/Runaway.jpg", mapX: 63.8, mapY: 9.4, audioTracks: [{title: "Ride POV", file: "Audio/Runaway.mp3"}, {title: "Queue Audio", file: "Audio/RunawayQueue.mp3"}] },
+                    Rodger: { name: "Cartoon Spin", image: "images/Toontown Area Music.png", mapX: 67.8, mapY: 12.9, audioTracks: [{title: "Ride POV", file: "Audio/Rabbit.mp3"}] }
                 }
             },
             tomorrowland: {
                 name: "Tomorrowland", image: "images/Tomorrowland.png", icon: "images/Space Icon.png", 
                 ambientAudio: ["Audio/TL1.mp3","Audio/TL2.mp3"],
                 rides: {
-                    spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", audio: "audio/space_mountain.mp3", mapX: 76.9, mapY: 69.5 },
-                    starTours: { name: "Star Tours", image: "images/Star Tours.png", audio: "audio/star_tours.mp3", mapX: 69.2, mapY: 60.7 },
-                    Buzz: { name: "Buzz Lightyear's Space Ranger Spin", image: "images/Buzz.png", audio: "Audio/Buzz.mp3", mapX: 73.3, mapY: 56.3 },
-                    Carousel: { name: "Carousel of Progress", image: "images/Carousel of Progress.png", audio: "audio/star_tours.mp3", mapX: 86.9, mapY: 58.3 },
+                    spaceMountain: { name: "Space Mountain", image: "images/Space Mountain.png", mapX: 76.9, mapY: 69.5, audioTracks: [{title: "Michael Giacchino Score", file: "audio/space_mountain.mp3"}, {title: "Dick Dale Score", file: "audio/space_mountain_old.mp3"}] },
+                    starTours: { name: "Star Tours", image: "images/Star Tours.png", mapX: 69.2, mapY: 60.7, audioTracks: [{title: "Ride POV", file: "audio/star_tours.mp3"}, {title: "Queue Droids", file: "audio/star_tours_queue.mp3"}] },
+                    Buzz: { name: "Astro Blasters", image: "images/Buzz.png", mapX: 73.3, mapY: 56.3, audioTracks: [{title: "Ride POV", file: "Audio/Buzz.mp3"}] },
+                    Carousel: { name: "Carousel of Progress", image: "images/Carousel of Progress.png", mapX: 86.9, mapY: 58.3, audioTracks: [{title: "Full Show", file: "audio/carousel.mp3"}] },
                }
             }
         };
 
         const mapPinsContainer = document.getElementById('map-pins-container');
         const itineraryList = document.getElementById('itinerary-list');
-        
         const npTitle = document.getElementById('np-title');
         const npSubtitle = document.getElementById('np-subtitle');
         const npImage = document.getElementById('np-image');
@@ -442,25 +330,25 @@
         const timeTotal = document.getElementById('time-total');
         const volumeContainer = document.getElementById('volume-container');
         const volumeSlider = document.getElementById('volume-slider');
+        
         let masterVolume = 1.0; 
-
         let itinerary = []; 
         let playbackQueue = []; 
         let nextItemId = 0; 
         let isWalkthroughActive = false;
+        let activePopup = null; // Keeps track of open menus
 
         const player1 = document.getElementById('player-1');
         const player2 = document.getElementById('player-2');
         let activePlayer = 1; 
         let fadeInterval;
 
-        // --- MAP RENDERING (NOW WITH PICTURE PINS) ---
+        // --- MAP RENDERING ---
         function renderMapPins() {
             mapPinsContainer.innerHTML = '';
             
             for (const landKey in parkData) {
                 const land = parkData[landKey];
-
                 for (const rideKey in land.rides) {
                     const ride = land.rides[rideKey];
                     if (ride.mapX && ride.mapY) {
@@ -468,35 +356,91 @@
                         ridePin.className = 'map-pin ride-pin';
                         ridePin.style.left = ride.mapX + '%';
                         ridePin.style.top = ride.mapY + '%';
-                        
-                        // ✨ MAGIC ✨ Paints the ride picture directly onto the map pin
                         ridePin.style.backgroundImage = `url('${ride.image}')`;
                         ridePin.style.backgroundSize = 'cover';
                         ridePin.style.backgroundPosition = 'center';
-                        
                         ridePin.setAttribute('data-name', ride.name);
-                        ridePin.onclick = () => addToItinerary(landKey, rideKey);
+                        
+                        // NEW: Open the menu instead of instantly queueing
+                        ridePin.onclick = (e) => {
+                            e.stopPropagation(); // Stop click from triggering map click
+                            openPopupMenu(landKey, rideKey);
+                        };
                         mapPinsContainer.appendChild(ridePin);
                     }
                 }
             }
         }
-
         renderMapPins();
 
-        // --- QUEUE MANAGEMENT LOGIC ---
-        function addToItinerary(landKey, rideKey) {
-            const landData = parkData[landKey];
-            let titleText = rideKey ? landData.rides[rideKey].name : landData.name;
-            let subtitleText = rideKey ? landData.name : "Atmosphere";
-            let imageSrc = rideKey ? landData.rides[rideKey].image : landData.image;
+        // --- THE CUSTOM POPUP LOGIC ---
+        function openPopupMenu(landKey, rideKey) {
+            closePopup(); // Close any existing one
 
-            if (itinerary.length === 0) {
-                itineraryList.innerHTML = ''; 
+            const ride = parkData[landKey].rides[rideKey];
+            const tracks = ride.audioTracks;
+
+            const popup = document.createElement('div');
+            popup.className = 'custom-popup';
+            popup.style.left = ride.mapX + '%';
+            popup.style.top = ride.mapY + '%';
+
+            let html = `<span class="close-popup" onclick="closePopup()">✕</span>
+                        <h4>${ride.name}</h4>`;
+
+            tracks.forEach((track, index) => {
+                // Pass the index so we know EXACTLY which file they wanted
+                html += `<button onmousedown="event.stopPropagation()" onclick="queueSelectedTrack('${landKey}', '${rideKey}', ${index})">
+                            ➕ ${track.title}
+                         </button>`;
+            });
+
+            popup.innerHTML = html;
+            document.getElementById('map-zoom-container').appendChild(popup);
+            activePopup = popup;
+        }
+
+        function closePopup() {
+            if (activePopup) {
+                activePopup.remove();
+                activePopup = null;
+            }
+        }
+
+        // Close popup if you click anywhere else on the map
+        document.getElementById('map-wrapper').addEventListener('mousedown', (e) => {
+            if (!e.target.closest('.custom-popup') && !e.target.classList.contains('map-pin')) {
+                closePopup();
+            }
+        });
+
+        // --- QUEUE MANAGEMENT LOGIC ---
+        function queueSelectedTrack(landKey, rideKey, trackIndex) {
+            closePopup(); // Hide the menu
+            addToItinerary(landKey, rideKey, trackIndex);
+        }
+
+        // Updated to accept the specific track selected
+        function addToItinerary(landKey, rideKey, trackIndex = 0) {
+            const landData = parkData[landKey];
+            const rideData = rideKey ? landData.rides[rideKey] : null;
+            
+            let titleText = rideData ? rideData.name : landData.name;
+            let imageSrc = rideData ? rideData.image : landData.image;
+            
+            // Set the subtitle to show exactly what audio track they picked
+            let subtitleText = "Atmosphere";
+            let selectedTrack = null;
+            if (rideData && rideData.audioTracks) {
+                selectedTrack = rideData.audioTracks[trackIndex];
+                subtitleText = `${landData.name} - ${selectedTrack.title}`;
             }
 
+            if (itinerary.length === 0) { itineraryList.innerHTML = ''; }
+
             const itemId = nextItemId++; 
-            itinerary.push({ land: landKey, ride: rideKey, id: itemId });
+            // Save the trackIndex so the player knows what to load later
+            itinerary.push({ land: landKey, ride: rideKey, trackIndex: trackIndex, id: itemId });
 
             const li = document.createElement('li');
             li.id = "itinerary-item-" + itemId; 
@@ -506,7 +450,7 @@
                     <span class="queue-title">${titleText}</span>
                     <span class="queue-subtitle">${subtitleText}</span>
                 </div>
-                <button class="remove-item-btn" onclick="removeFromItinerary(${itemId})" title="Remove from queue">✕</button>
+                <button class="remove-item-btn" onclick="removeFromItinerary(${itemId})" title="Remove">✕</button>
             `;
             itineraryList.appendChild(li);
 
@@ -517,21 +461,17 @@
                     title: `Walking through ${landData.name}`, subtitle: "Atmosphere", targetId: "itinerary-item-" + itemId
                 });
 
-                if (rideKey) {
-                    const rideData = landData.rides[rideKey];
+                if (rideData && selectedTrack) {
                     playbackQueue.push({
-                        audio: rideData.audio, image: rideData.image, landIcon: landData.icon, 
-                        title: rideData.name, subtitle: landData.name, targetId: "itinerary-item-" + itemId
+                        audio: selectedTrack.file, image: rideData.image, landIcon: landData.icon, 
+                        title: rideData.name, subtitle: subtitleText, targetId: "itinerary-item-" + itemId
                     });
                 }
 
                 if (playPauseBtn.style.display === 'none') {
-                    skipBtn.style.display = 'flex';
-                    playPauseBtn.style.display = 'flex'; 
-                    playPauseBtn.classList.remove('is-paused');
-                    playPauseBtn.classList.add('is-playing');
-                    progressContainer.style.display = 'flex';
-                    volumeContainer.style.display = 'flex';
+                    skipBtn.style.display = 'flex'; playPauseBtn.style.display = 'flex'; 
+                    playPauseBtn.classList.remove('is-paused'); playPauseBtn.classList.add('is-playing');
+                    progressContainer.style.display = 'flex'; volumeContainer.style.display = 'flex';
                     playNextInQueue();
                 }
             }
@@ -543,15 +483,13 @@
             if (li) li.remove(); 
             itinerary = itinerary.filter(item => item.id !== id);
             playbackQueue = playbackQueue.filter(step => step.targetId !== "itinerary-item-" + id);
-            if (itinerary.length === 0) {
-                itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
-            }
+            if (itinerary.length === 0) { itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>'; }
             if (wasActive) skipStep(); 
         }
 
         function clearItinerary() {
             isWalkthroughActive = false; 
-            itinerary = []; playbackQueue = []; nextItemId = 0; 
+            itinerary = []; playbackQueue = []; nextItemId = 0; closePopup();
             itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
             npTitle.textContent = 'Ready to Play'; npSubtitle.textContent = 'Build your queue above';
             npImage.style.display = 'none'; npImage.src = '';
@@ -569,9 +507,12 @@
                 const landData = parkData[item.land];
                 const randomAmbient = landData.ambientAudio[Math.floor(Math.random() * landData.ambientAudio.length)];
                 playbackQueue.push({ audio: randomAmbient, image: landData.image, landIcon: landData.icon, title: `Walking through ${landData.name}`, subtitle: "Atmosphere", targetId: "itinerary-item-" + item.id });
+                
                 if (item.ride) {
                     const rideData = landData.rides[item.ride];
-                    playbackQueue.push({ audio: rideData.audio, image: rideData.image, landIcon: landData.icon, title: rideData.name, subtitle: landData.name, targetId: "itinerary-item-" + item.id });
+                    // Make sure we pull the exact track they clicked!
+                    const selectedTrack = rideData.audioTracks[item.trackIndex];
+                    playbackQueue.push({ audio: selectedTrack.file, image: rideData.image, landIcon: landData.icon, title: rideData.name, subtitle: `${landData.name} - ${selectedTrack.title}`, targetId: "itinerary-item-" + item.id });
                 }
             });
 
@@ -634,9 +575,7 @@
         player1.onended = function() { playNextInQueue(); }; player2.onended = function() { playNextInQueue(); };
 
 
-        // =========================================
-        // ✨ ZOOM & PAN JAVASCRIPT ✨ 
-        // =========================================
+        // --- ZOOM & PAN JAVASCRIPT --- 
         let currentZoom = 100; 
         const zoomContainer = document.getElementById('map-zoom-container');
         const mapWrapper = document.getElementById('map-wrapper');
@@ -645,26 +584,17 @@
             const zoomStep = 50; 
             const minZoom = 100; 
             const maxZoom = 400; 
-            
             currentZoom += (direction * zoomStep);
-            
             if (currentZoom < minZoom) currentZoom = minZoom;
             if (currentZoom > maxZoom) currentZoom = maxZoom;
-            
             zoomContainer.style.width = currentZoom + '%';
         }
 
-        // --- Scroll Wheel to Zoom ---
         mapWrapper.addEventListener('wheel', (e) => {
             e.preventDefault(); 
-            if (e.deltaY < 0) {
-                zoomMap(1); 
-            } else {
-                zoomMap(-1); 
-            }
+            if (e.deltaY < 0) { zoomMap(1); } else { zoomMap(-1); }
         }, { passive: false }); 
 
-        // --- Mouse Drag to Pan ---
         let isDown = false;
         let startX, startY, scrollLeft, scrollTop;
 
@@ -689,18 +619,6 @@
             const walkY = (y - startY) * 1.5; 
             mapWrapper.scrollLeft = scrollLeft - walkX;
             mapWrapper.scrollTop = scrollTop - walkY;
-        });
-
-        // --- 📍 TEMPORARY MAP PIN FINDER 📍 ---
-        // Delete this block after you place all your pins!
-        zoomContainer.addEventListener('click', function(event) {
-            if(event.target.classList.contains('map-pin')) return; 
-
-            const rect = zoomContainer.getBoundingClientRect();
-            const x = ((event.clientX - rect.left) / rect.width * 100).toFixed(1);
-            const y = ((event.clientY - rect.top) / rect.height * 100).toFixed(1);
-            
-            alert(`📍 Coordinates for this spot:\n\nmapX: ${x}, mapY: ${y}`);
         });
 
     </script>
