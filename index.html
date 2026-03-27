@@ -70,10 +70,8 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.8);
             z-index: 1000;
             min-width: 180px;
-            /* Center horizontally and move it up above the pin */
             transform: translate(-50%, calc(-100% - 25px)); 
         }
-        /* The little triangle pointing down at the pin */
         .custom-popup::after {
             content: ''; position: absolute; top: 100%; left: 50%; margin-left: -8px;
             border-width: 8px; border-style: solid;
@@ -235,7 +233,6 @@
     <audio id="player-2" class="hidden-player"></audio>
 
     <script>
-        // --- DATA UPDATED: "audio" is now "audioTracks" arrays ---
         const parkData = {
             mainStreet: {
                 name: "Main Street, U.S.A.", image: "images/Main Street.png", icon: "images/Trolly.png", 
@@ -336,7 +333,7 @@
         let playbackQueue = []; 
         let nextItemId = 0; 
         let isWalkthroughActive = false;
-        let activePopup = null; // Keeps track of open menus
+        let activePopup = null; 
 
         const player1 = document.getElementById('player-1');
         const player2 = document.getElementById('player-2');
@@ -361,9 +358,8 @@
                         ridePin.style.backgroundPosition = 'center';
                         ridePin.setAttribute('data-name', ride.name);
                         
-                        // NEW: Open the menu instead of instantly queueing
                         ridePin.onclick = (e) => {
-                            e.stopPropagation(); // Stop click from triggering map click
+                            e.stopPropagation(); 
                             openPopupMenu(landKey, rideKey);
                         };
                         mapPinsContainer.appendChild(ridePin);
@@ -375,7 +371,7 @@
 
         // --- THE CUSTOM POPUP LOGIC ---
         function openPopupMenu(landKey, rideKey) {
-            closePopup(); // Close any existing one
+            closePopup(); 
 
             const ride = parkData[landKey].rides[rideKey];
             const tracks = ride.audioTracks;
@@ -389,7 +385,6 @@
                         <h4>${ride.name}</h4>`;
 
             tracks.forEach((track, index) => {
-                // Pass the index so we know EXACTLY which file they wanted
                 html += `<button onmousedown="event.stopPropagation()" onclick="queueSelectedTrack('${landKey}', '${rideKey}', ${index})">
                             ➕ ${track.title}
                          </button>`;
@@ -407,7 +402,6 @@
             }
         }
 
-        // Close popup if you click anywhere else on the map
         document.getElementById('map-wrapper').addEventListener('mousedown', (e) => {
             if (!e.target.closest('.custom-popup') && !e.target.classList.contains('map-pin')) {
                 closePopup();
@@ -416,11 +410,10 @@
 
         // --- QUEUE MANAGEMENT LOGIC ---
         function queueSelectedTrack(landKey, rideKey, trackIndex) {
-            closePopup(); // Hide the menu
+            closePopup(); 
             addToItinerary(landKey, rideKey, trackIndex);
         }
 
-        // Updated to accept the specific track selected
         function addToItinerary(landKey, rideKey, trackIndex = 0) {
             const landData = parkData[landKey];
             const rideData = rideKey ? landData.rides[rideKey] : null;
@@ -428,7 +421,6 @@
             let titleText = rideData ? rideData.name : landData.name;
             let imageSrc = rideData ? rideData.image : landData.image;
             
-            // Set the subtitle to show exactly what audio track they picked
             let subtitleText = "Atmosphere";
             let selectedTrack = null;
             if (rideData && rideData.audioTracks) {
@@ -439,7 +431,6 @@
             if (itinerary.length === 0) { itineraryList.innerHTML = ''; }
 
             const itemId = nextItemId++; 
-            // Save the trackIndex so the player knows what to load later
             itinerary.push({ land: landKey, ride: rideKey, trackIndex: trackIndex, id: itemId });
 
             const li = document.createElement('li');
@@ -510,7 +501,6 @@
                 
                 if (item.ride) {
                     const rideData = landData.rides[item.ride];
-                    // Make sure we pull the exact track they clicked!
                     const selectedTrack = rideData.audioTracks[item.trackIndex];
                     playbackQueue.push({ audio: selectedTrack.file, image: rideData.image, landIcon: landData.icon, title: rideData.name, subtitle: `${landData.name} - ${selectedTrack.title}`, targetId: "itinerary-item-" + item.id });
                 }
@@ -535,6 +525,7 @@
 
         function skipStep() { playNextInQueue(); }
 
+        // ✨ FIX 1: UPDATED QUEUE LOGIC ✨
         function playNextInQueue() {
             document.querySelectorAll('#itinerary-list li').forEach(li => li.classList.remove('active-item'));
             let currentPlayer = activePlayer === 1 ? player1 : player2;
@@ -543,7 +534,12 @@
             if (playbackQueue.length === 0) {
                 npTitle.textContent = "Walkthrough Complete"; npSubtitle.textContent = "Hope you had a magical day!";
                 npImage.style.display = "none"; skipBtn.style.display = 'none'; playPauseBtn.style.display = 'none';
-                progressContainer.style.display = 'none'; volumeContainer.style.display = 'none'; fadeOutSingle(currentPlayer); return;
+                progressContainer.style.display = 'none'; volumeContainer.style.display = 'none'; 
+                
+                isWalkthroughActive = false; // ✨ NEW: Fully resets the state
+                
+                fadeOutSingle(currentPlayer); 
+                return;
             }
 
             const currentStep = playbackQueue.shift(); 
@@ -571,7 +567,30 @@
 
         function crossfade(fadeOutPlayer, fadeInPlayer) { clearInterval(fadeInterval); let progress = 0; fadeInterval = setInterval(() => { progress += 0.05; if (progress >= 1) { clearInterval(fadeInterval); fadeInPlayer.volume = masterVolume; fadeOutPlayer.volume = 0; fadeOutPlayer.pause(); } else { fadeInPlayer.volume = progress * masterVolume; fadeOutPlayer.volume = (1 - progress) * masterVolume; } }, 100); }
         function fadeInSingle(player) { clearInterval(fadeInterval); let progress = 0; player.volume = 0; fadeInterval = setInterval(() => { progress += 0.05; if (progress >= 1) { clearInterval(fadeInterval); player.volume = masterVolume; } else { player.volume = progress * masterVolume; } }, 100); }
-        function fadeOutSingle(player) { clearInterval(fadeInterval); let progress = 1; fadeInterval = setInterval(() => { progress -= 0.05; if (progress <= 0) { clearInterval(fadeInterval); player.volume = 0; player.pause(); } else { player.volume = progress * masterVolume; } }, 100); }
+        
+        // ✨ FIX 2: BULLETPROOF FADE OUT LOGIC ✨
+        function fadeOutSingle(player) { 
+            clearInterval(fadeInterval); 
+            
+            const otherPlayer = player === player1 ? player2 : player1;
+            otherPlayer.pause();
+            otherPlayer.src = ''; 
+            
+            let progress = 1; 
+            fadeInterval = setInterval(() => { 
+                progress -= 0.05; 
+                if (progress <= 0) { 
+                    clearInterval(fadeInterval); 
+                    player.volume = 0; 
+                    player.pause(); 
+                    player.src = ''; 
+                } else { 
+                    player.volume = Math.max(0, Math.min(1, progress * masterVolume)); 
+                } 
+            }, 100); 
+        }
+        // ---------------------------------------
+
         player1.onended = function() { playNextInQueue(); }; player2.onended = function() { playNextInQueue(); };
 
 
