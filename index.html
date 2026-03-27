@@ -50,6 +50,86 @@
         .zoom-btn { background-color: rgba(30, 30, 30, 0.8); color: white; border: 1px solid #555; border-radius: 50%; width: 44px; height: 44px; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(5px); transition: background-color 0.2s, transform 0.1s; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .zoom-btn:hover { background-color: var(--accent-blue); }
         .zoom-btn:active { transform: scale(0.9); }
+        /* --- MASSIVE PICTURE SCRUBBER --- */
+        .progress-container {
+            display: none; 
+            align-items: center;
+            width: 100%;
+        }
+
+        #time-current, #time-total {
+            font-size: 14px; 
+            color: var(--text-muted);
+            min-width: 50px;
+        }
+        #time-current { text-align: right; }
+        #time-total { text-align: left; }
+
+        #progress-slider {
+            flex: 1;
+            margin: 0 20px; 
+            cursor: pointer;
+            -webkit-appearance: none; 
+            background: transparent; 
+            height: 48px; 
+            --thumb-icon: url('data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'16\\' height=\\'16\\'><circle cx=\\'8\\' cy=\\'8\\' r=\\'8\\' fill=\\'%23ffc107\\'/></svg>'); 
+        }
+
+        #progress-slider::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
+        #progress-slider::-moz-range-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
+
+        #progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
+            background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; 
+            margin-top: -20px; 
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s;
+        }
+        #progress-slider::-moz-range-thumb {
+            height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
+            background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent;
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s;
+        }
+
+        /* --- PIXIE DUST VOLUME SLIDER --- */
+        .player-right {
+            width: 30%;
+            min-width: 320px; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+        }
+
+        .volume-container {
+            display: none; 
+            align-items: center;
+            gap: 12px;
+            width: 160px; 
+        }
+
+        #vol-icon { font-size: 20px; color: var(--text-muted); }
+
+        #volume-slider {
+            flex: 1; -webkit-appearance: none; background: transparent; height: 24px; cursor: pointer;
+        }
+        #volume-slider::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
+        #volume-slider::-moz-range-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
+
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background-color: transparent;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
+            background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -10px; 
+            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+        }
+        #volume-slider::-webkit-slider-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
+        #volume-slider::-moz-range-thumb {
+            height: 24px; width: 24px; border-radius: 50%; border: none; background-color: transparent;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s;
+        }
+        #volume-slider::-moz-range-thumb:hover { transform: scale(1.3) rotate(15deg); filter: drop-shadow(0 0 8px #ffc107) drop-shadow(0 0 15px #ffffff); }
+
+        .hidden-player { display: none; }
 
         /* --- PICTURE PINS & MAGIC PULSE --- */
         .map-pin { position: absolute; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.8); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s; z-index: 10; }
@@ -593,6 +673,47 @@
 
         player1.onended = function() { playNextInQueue(); }; player2.onended = function() { playNextInQueue(); };
 
+        // --- VOLUME CONTROL LOGIC ---
+        volumeSlider.addEventListener('input', (e) => {
+            masterVolume = e.target.value / 100;
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            if (!currentPlayer.paused) {
+                currentPlayer.volume = masterVolume;
+            }
+        });
+        
+// --- SLIDER AND TIME TRACKING LOGIC ---
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return m + ":" + (s < 10 ? "0" + s : s);
+        }
+
+        function updateSliderProgress(e) {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            if (e.target !== currentPlayer) return;
+
+            const current = currentPlayer.currentTime;
+            const duration = currentPlayer.duration;
+            
+            timeCurrent.textContent = formatTime(current);
+            if (duration) {
+                timeTotal.textContent = formatTime(duration);
+                progressSlider.max = duration;
+                progressSlider.value = current;
+            }
+        }
+
+        player1.addEventListener('timeupdate', updateSliderProgress);
+        player2.addEventListener('timeupdate', updateSliderProgress);
+
+        progressSlider.addEventListener('input', (e) => {
+            const currentPlayer = activePlayer === 1 ? player1 : player2;
+            const seekTime = e.target.value;
+            currentPlayer.currentTime = seekTime;
+            timeCurrent.textContent = formatTime(seekTime);
+        });
 
         // --- ZOOM & PAN JAVASCRIPT --- 
         let currentZoom = 100; 
