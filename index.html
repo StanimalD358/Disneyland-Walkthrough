@@ -183,7 +183,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            flex: 1; /* Allows text to take up remaining space */
+            flex: 1;
         }
 
         .queue-title {
@@ -204,7 +204,6 @@
             text-overflow: ellipsis;
         }
 
-        /* NEW: Individual Remove Button */
         .remove-item-btn {
             background: transparent;
             border: none;
@@ -216,7 +215,7 @@
             transition: opacity 0.2s, color 0.2s, transform 0.2s;
         }
         #itinerary-list li:hover .remove-item-btn {
-            opacity: 1; /* Shows up clearly when hovering over the track */
+            opacity: 1; 
         }
         .remove-item-btn:hover {
             color: #ff4d4d;
@@ -252,6 +251,7 @@
             display: flex;
             align-items: center;
             width: 30%;
+            min-width: 320px;
         }
 
         #np-image {
@@ -352,13 +352,8 @@
 
         .icon-play, .icon-pause { display: none; }
         
-        #play-pause-btn.is-paused .icon-play { 
-            display: block; 
-            margin-left: 5px; 
-        }
-        #play-pause-btn.is-playing .icon-pause { 
-            display: block; 
-        }
+        #play-pause-btn.is-paused .icon-play { display: block; margin-left: 5px; }
+        #play-pause-btn.is-playing .icon-pause { display: block; }
 
         /* --- MASSIVE PICTURE SCRUBBER --- */
         .progress-container {
@@ -389,27 +384,23 @@
         #progress-slider::-moz-range-track { width: 100%; height: 8px; background: #444; border-radius: 4px; }
 
         #progress-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
-            background-image: var(--thumb-icon);
-            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; 
+            -webkit-appearance: none; height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
+            background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; 
             margin-top: -20px; 
-            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8));
-            transition: background-image 0.3s;
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s;
         }
         #progress-slider::-moz-range-thumb {
             height: 48px; width: 48px; border-radius: 0; border: none; outline: none;
-            background-image: var(--thumb-icon);
-            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent;
-            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8));
-            transition: background-image 0.3s;
+            background-image: var(--thumb-icon); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent;
+            filter: drop-shadow(0px 3px 8px rgba(0,0,0,0.8)); transition: background-image 0.3s;
         }
 
         /* --- PIXIE DUST VOLUME SLIDER --- */
         .player-right {
             width: 30%;
+            min-width: 320px; 
             display: flex;
-            justify-content: flex-end; 
+            justify-content: center; 
             align-items: center;
         }
 
@@ -437,8 +428,7 @@
         #volume-slider::-moz-range-track { width: 100%; height: 4px; background: #444; border-radius: 2px; }
 
         #volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 24px; width: 24px; border-radius: 50%; background-color: transparent;
+            -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background-color: transparent;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>');
             background-size: contain; background-repeat: no-repeat; background-position: center; margin-top: -10px; 
             filter: drop-shadow(0 0 4px #ffc107) drop-shadow(0 0 10px #ffeba1);
@@ -653,7 +643,8 @@
         let currentSelectedRide = "";
         let itinerary = []; 
         let playbackQueue = []; 
-        let nextItemId = 0; // NEW: Generates a truly unique ID for every item added to the queue
+        let nextItemId = 0; 
+        let isWalkthroughActive = false; // NEW: Tracks if the live session is running
 
         const player1 = document.getElementById('player-1');
         const player2 = document.getElementById('player-2');
@@ -718,7 +709,7 @@
 
         renderLands();
 
-        // --- QUEUE MANAGEMENT LOGIC ---
+        // --- UPDATED LIVE QUEUE ADDITION ---
         function addToItinerary() {
             if (!currentSelectedLand) {
                 alert("Please select a land first!");
@@ -734,7 +725,7 @@
             let subtitleText = currentSelectedRide ? landData.name : "Atmosphere";
             let imageSrc = currentSelectedRide ? landData.rides[currentSelectedRide].image : landData.image;
 
-            const itemId = nextItemId++; // Generate a unique ID for this specific entry
+            const itemId = nextItemId++; 
             itinerary.push({ land: currentSelectedLand, ride: currentSelectedRide, id: itemId });
 
             const li = document.createElement('li');
@@ -751,34 +742,78 @@
             
             itineraryList.appendChild(li);
 
+            // NEW: If Walkthrough is already running, dynamically inject the tracks into the live player!
+            if (isWalkthroughActive) {
+                const randomAmbient = landData.ambientAudio[Math.floor(Math.random() * landData.ambientAudio.length)];
+                
+                // Add the ambient walking step
+                playbackQueue.push({
+                    audio: randomAmbient,
+                    image: landData.image,
+                    landIcon: landData.icon, 
+                    title: `Walking through ${landData.name}`,
+                    subtitle: "Atmosphere",
+                    targetId: "itinerary-item-" + itemId
+                });
+
+                // Add the ride step if they selected one
+                if (currentSelectedRide) {
+                    const rideData = landData.rides[currentSelectedRide];
+                    playbackQueue.push({
+                        audio: rideData.audio,
+                        image: rideData.image,
+                        landIcon: landData.icon, 
+                        title: rideData.name,
+                        subtitle: landData.name,
+                        targetId: "itinerary-item-" + itemId
+                    });
+                }
+
+                // If the player went to sleep because the queue emptied out, wake it back up!
+                if (playPauseBtn.style.display === 'none') {
+                    skipBtn.style.display = 'flex';
+                    playPauseBtn.style.display = 'flex'; 
+                    playPauseBtn.classList.remove('is-paused');
+                    playPauseBtn.classList.add('is-playing');
+                    progressContainer.style.display = 'flex';
+                    volumeContainer.style.display = 'flex';
+                    playNextInQueue();
+                }
+            }
+
+            // Cleanup builder UI
             currentSelectedLand = "";
             currentSelectedRide = "";
             document.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
             ridesSection.style.display = "none";
         }
 
-        // NEW: Function to remove a single item from the queue
+        // --- UPDATED LIVE QUEUE DELETION ---
         function removeFromItinerary(id) {
-            // 1. Remove from the visual layout
             const li = document.getElementById("itinerary-item-" + id);
-            if (li) li.remove();
+            const wasActive = li && li.classList.contains('active-item'); // Check if they are deleting the song currently playing
 
-            // 2. Remove from the master array
+            if (li) li.remove(); // Remove visual
+
+            // Remove from background arrays
             itinerary = itinerary.filter(item => item.id !== id);
-
-            // 3. Remove from the upcoming playback queue (so it skips it dynamically!)
             playbackQueue = playbackQueue.filter(step => step.targetId !== "itinerary-item-" + id);
 
-            // 4. Restore the empty state message if they delete the very last item
             if (itinerary.length === 0) {
                 itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
+            }
+
+            // NEW: If they delete the song that is actively playing, gracefully skip to the next track!
+            if (wasActive) {
+                skipStep(); 
             }
         }
 
         function clearItinerary() {
+            isWalkthroughActive = false; // Reset live session status
             itinerary = [];
             playbackQueue = [];
-            nextItemId = 0; // Reset the ID counter
+            nextItemId = 0; 
             itineraryList.innerHTML = '<li style="color: #555; padding: 10px 0;">Your queue is empty.</li>';
             
             npTitle.textContent = 'Ready to Play';
@@ -803,6 +838,7 @@
                 return;
             }
 
+            isWalkthroughActive = true; // Mark session as live so new additions are injected automatically
             playbackQueue = []; 
 
             itinerary.forEach(item => {
@@ -815,7 +851,7 @@
                     landIcon: landData.icon, 
                     title: `Walking through ${landData.name}`,
                     subtitle: "Atmosphere",
-                    targetId: "itinerary-item-" + item.id // Updated to use unique ID
+                    targetId: "itinerary-item-" + item.id 
                 });
 
                 if (item.ride) {
@@ -826,7 +862,7 @@
                         landIcon: landData.icon, 
                         title: rideData.name,
                         subtitle: landData.name,
-                        targetId: "itinerary-item-" + item.id // Updated to use unique ID
+                        targetId: "itinerary-item-" + item.id 
                     });
                 }
             });
@@ -841,7 +877,7 @@
                 landIcon: lastLandData.icon, 
                 title: `Exiting into ${lastLandData.name}`,
                 subtitle: "Atmosphere",
-                targetId: "itinerary-item-" + lastItem.id // Updated to use unique ID
+                targetId: "itinerary-item-" + lastItem.id 
             });
 
             skipBtn.style.display = 'flex';
@@ -887,6 +923,7 @@
                 progressContainer.style.display = 'none';
                 volumeContainer.style.display = 'none';
                 fadeOutSingle(currentPlayer);
+                // We deliberately leave isWalkthroughActive = true, so if they add a song now, it wakes right back up!
                 return;
             }
 
